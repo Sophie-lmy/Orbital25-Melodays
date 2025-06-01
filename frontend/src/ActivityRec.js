@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 function ActivityRec() {
-  const [activity, setActivity] = useState('studying');
+  const [activity, setActivity] = useState('study');
   const [songs, setSongs] = useState([]);
 
   const getSongs = async () => {
