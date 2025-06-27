@@ -1,0 +1,74 @@
+.homepage-wrapper {
+  display: flex;
+  height: 100vh;
+  font-family: 'Georgia', serif;
+}
+
+/* left panel */
+.sidebar {
+  width: 30%;
+  background-color: black;
+  color: white;
+  padding: 60px 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar h2 {
+  font-size: 40px;
+  margin-bottom: 26px;
+}
+
+.logo {
+  width: auto;            
+  height: auto;            
+  margin-bottom: 9px;    
+  display: block;          
+  margin-left: auto;       
+  margin-right: auto;
+}
+
+.subtitle {
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.sidebar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+  margin-top: auto;
+}
+
+.sidebar-links a {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+}
+
+/* right panel */
+.main-content {
+  flex: 1;
+  background-color: #6600cc;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 45px;
+  justify-content: center;
+}
+
+.feature-card {
+  background-color: black;
+  color: white;
+  text-decoration: none;
+  padding: 30px 30px;
+  border-radius: 15px;
+  font-size: 25px;
+  transition: transform 0.2s ease;
+}
+
+/* zoom effect */
+.feature-card:hover {
+  transform: scale(1.03);
+}

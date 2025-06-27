@@ -1,25 +1,26 @@
 import React from 'react';
-import MoodRec from './MoodRec';
-import ActivityRec from './ActivityRec';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginPage from './pages/LoginPage/LoginPage';
+import HomePage from './pages/HomePage/HomePage';
+import MoodPage from './pages/MoodPage/MoodPage';
+import ActivityPage from './pages/ActivityPage/ActivityPage';
+import MusicPlayer from './pages/MusicPlayer/MusicPlayer'; 
+import DailyRec from './pages/DailyRec/DailyRec';
+
 
 function App() {
   return (
-    <div className="App">
-      <header>
-        <h1>Melodays</h1>
-        <p>Music for every version of you.</p>
-      </header>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/mood" element={<MoodPage />} />
+        <Route path="/activity" element={<ActivityPage />} />
+        <Route path="/player/:emotion" element={<MusicPlayer />} />
+        <Route path="/daily" element={<DailyRec />} />
 
-      <main>
-        <MoodRec />
-        <ActivityRec />
-      </main>
-
-      <footer>
-        <p>Built by Yuyu Synergy</p>
-      </footer>
-    </div>
+      </Routes>
+    </Router>
   );
 }
 
