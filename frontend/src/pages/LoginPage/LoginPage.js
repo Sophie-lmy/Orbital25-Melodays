@@ -11,7 +11,7 @@ function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const endpoint = isLogin ? 'login' : 'signup';
+    const endpoint = isLogin ? 'login' : 'register';
 
     try {
       const response = await fetch(`http://localhost:3000/${endpoint}`, {
