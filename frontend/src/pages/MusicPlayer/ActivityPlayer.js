@@ -9,11 +9,19 @@ function ActivityPlayer() {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    fetch(`/api/songs?activity=${activity}`)
+    fetch(`http://localhost:3000/recommend/activity`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ activity })
+    })
       .then(res => res.json())
       .then(data => {
         console.log('Fetched song:', data);
         setSong(data);
+        if (audioRef.current) {
+          audioRef.current.load();
+        }
+        setIsPlaying(false);
       })
       .catch(err => {
         console.error('Error loading song:', err);
@@ -21,26 +29,44 @@ function ActivityPlayer() {
       });
   }, [activity]);
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     if (!audioRef.current) return;
-    isPlaying ? audioRef.current.pause() : audioRef.current.play();
-    setIsPlaying(!isPlaying);
+
+    try {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        await audioRef.current.play();
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.error("Playback error:", error);
+    }
   };
 
   const getNextSong = () => {
-    fetch(`/api/songs?activity=${activity}&next=true`)
+    fetch(`http://localhost:3000/recommend/activity`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ activity })
+    })
       .then(res => res.json())
       .then(data => {
         setSong(data);
+        if (audioRef.current) {
+          audioRef.current.load();
+        }
         setIsPlaying(false);
-        setTimeout(() => {
-          audioRef.current?.play();
-          setIsPlaying(true);
-        }, 100);
+      })
+      .catch(err => {
+        console.error('Failed to get next song:', err);
       });
   };
 
-  if (!song) return <div className="music-player">Loading...</div>;
+  if (!song) {
+    return <div className="music-player">Loading...</div>;
+  }
 
   return (
     <div className="music-player">
@@ -64,7 +90,9 @@ function ActivityPlayer() {
 
         <button className="control-button" onClick={togglePlay}>
           <img
-            src= "/playbutton.png" alt="Play" className="control-icon"
+            src="/playbutton.png"
+            alt={isPlaying ? "Pause" : "Play"}
+            className="control-icon"
           />
         </button>
 
@@ -72,6 +100,7 @@ function ActivityPlayer() {
           <img src="/nextbutton.png" alt="Next" className="control-icon" />
         </button>
       </div>
+
       <div className="spotify-wrapper">
         <a
           href={song.spotify_url}

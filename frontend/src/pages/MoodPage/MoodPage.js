@@ -5,9 +5,27 @@ import './MoodPage.css';
 function MoodPage() {
   const navigate = useNavigate();
 
-  const handleMoodClick = (mood) => {
+  const handleMoodClick = async (moodLabel) => {
+    const mood = moodLabel.toLowerCase();
     console.log("Selected mood:", mood);
-    navigate(`/player/${mood.toLowerCase()}`); 
+
+    try {
+      const res = await fetch('http://localhost:3000/recommend/mood', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mood })
+      });
+
+      if (!res.ok) throw new Error('Failed to fetch');
+
+      const data = await res.json();
+      console.log('Received song:', data);
+
+      navigate('/player', { state: { song: data } });
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Failed to get recommendation. Please try again.');
+    }
   };
 
   const moods = [
@@ -45,4 +63,3 @@ function MoodPage() {
 }
 
 export default MoodPage;
-

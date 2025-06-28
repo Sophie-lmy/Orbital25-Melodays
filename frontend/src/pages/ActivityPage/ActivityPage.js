@@ -4,9 +4,28 @@ import './ActivityPage.css';
 
 function ActivityPage() {
   const navigate = useNavigate();
-  const handleActivityClick = (mood) => {
-    console.log("Selected mood:", mood);
-    navigate(`/player/${mood.toLowerCase()}`); 
+
+  const handleActivityClick = async (activityLabel) => {
+    const activity = activityLabel.toLowerCase();
+    console.log("Selected activity:", activity);
+
+    try {
+      const res = await fetch('http://localhost:3000/recommend/activity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ activity })
+      });
+
+      if (!res.ok) throw new Error('Failed to fetch activity recommendation');
+
+      const data = await res.json();
+      console.log('Received activity song:', data);
+
+      navigate('/player', { state: { song: data } });
+    } catch (err) {
+      console.error('Error fetching activity recommendation:', err);
+      alert('Failed to get activity-based recommendation. Please try again.');
+    }
   };
 
   const activities = [
