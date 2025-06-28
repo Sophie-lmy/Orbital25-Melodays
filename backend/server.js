@@ -1,13 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const db = require("./db");
+const initDatabase = require("./db/init");
 
 const authRoutes = require("./routes/auth");
 const recommendRoutes = require("./routes/recommend");
 const dailyRoutes = require("./routes/daily");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -16,10 +17,12 @@ app.use("/auth", authRoutes);
 app.use("/recommend", recommendRoutes);
 app.use("/daily", dailyRoutes);
 
+initDatabase();
+
 db.query("SELECT NOW()")
   .then(res => console.log("Database connected at", res.rows[0].now))
   .catch(err => console.error("Database connection error:", err));
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server is running on port ${port}`);
 });
