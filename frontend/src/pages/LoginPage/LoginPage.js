@@ -12,12 +12,17 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const endpoint = isLogin ? 'login' : 'register';
+    const defaultUsername = email.split('@')[0];
+
+    const body = isLogin
+     ? { email, password }
+     : { username: defaultUsername, email, password };
 
     try {
-      const response = await fetch(`http://localhost:3000/${endpoint}`, {
+      const response = await fetch(`http://localhost:3000/auth/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();
@@ -33,6 +38,7 @@ function LoginPage() {
       console.error(`${endpoint} error:`, error);
     }
   };
+
 
   return (
     <div className="login-container">

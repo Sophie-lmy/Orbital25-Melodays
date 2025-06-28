@@ -1,14 +1,20 @@
 const express = require("express");
-const app = express();
-const authRoutes = require("./routes/auth");
-const recommendRoutes = require("./routes/recommend");
+const cors = require("cors");
 const db = require("./db");
 
+const authRoutes = require("./routes/auth");
+const recommendRoutes = require("./routes/recommend");
+const dailyRoutes = require("./routes/daily");
+
+const app = express();
 const port = 3000;
 
+app.use(cors());
 app.use(express.json());
+
 app.use("/auth", authRoutes);
 app.use("/recommend", recommendRoutes);
+app.use("/daily", dailyRoutes);
 
 db.query("SELECT NOW()")
   .then(res => console.log("Database connected at", res.rows[0].now))

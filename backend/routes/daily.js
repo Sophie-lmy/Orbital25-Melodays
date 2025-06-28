@@ -1,7 +1,7 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const dailyController = require("../controllers/dailyController");
+const { getDailyRecommendation } = require('../controllers/dailyController');
 
-router.get("/", dailyController.getDailyRecommendation);
+router.get('/', getDailyRecommendation);
 
 module.exports = router;
