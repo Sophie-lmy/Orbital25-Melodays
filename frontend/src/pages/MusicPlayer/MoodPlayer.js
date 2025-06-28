@@ -16,20 +16,20 @@ function MoodPlayer() {
   }, [song]);
 
   const togglePlay = async () => {
-  if (!audioRef.current) return;
+    if (!audioRef.current) return;
 
-  try {
-    if (isPlaying) {
-      await audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      await audioRef.current.play();
-      setIsPlaying(true);
+    try {
+      if (isPlaying) {
+        await audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        await audioRef.current.play();
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.error("Playback error:", error);
     }
-  } catch (error) {
-    console.error("Playback error:", error);
-  }
-};
+  };
 
   if (!song) {
     return <div className="music-player">No song found. Please go back and select a mood.</div>;
@@ -47,8 +47,17 @@ function MoodPlayer() {
         <p className="songinfo">{song.title}</p>
         <p className="songinfo">{song.artist || "Unknown Artist"}</p>
       </div>
-
-      <audio ref={audioRef} src={song.preview_url} />
+      
+      {/* <audio ref={audioRef} src="/TaylorSwift-BlankSpace.mp3" /> */}
+      <audio
+        ref={audioRef}
+        src={`/proxy/preview?url=${encodeURIComponent(song.preview_url)}`}
+        onError={() => console.error("Failed to load preview")}
+        onCanPlay={() => console.log("Preview is ready to play")}
+        onPlay={() => console.log("Playing preview")}
+        onPause={() => console.log("⏸Paused")}
+        controls={false}
+      />
 
       <div className="controls">
         <button className="control-button">

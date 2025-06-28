@@ -13,6 +13,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<MoodPage />} />
         <Route path="/" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/mood" element={<MoodPage />} />
