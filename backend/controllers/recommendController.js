@@ -2,7 +2,7 @@ const axios = require('axios');
 const { getValidAccessToken } = require('../utils/spotifyToken');
 
 const moodKeywords = {
-  happy: ['joyful', 'cheerful', 'sunshine', 'celebration'],
+  happy: ['joyful', 'cheerful', 'sunshine', 'celebration', 'happy', 'upbeat', 'fun', 'energetic'],
   sad: ['melancholy', 'tears', 'lonely', 'farewell'],
   angry: ['rage', 'storm', 'shout', 'fire'],
   loved: ['romantic', 'heartbeat', 'together', 'forever'],
@@ -22,7 +22,11 @@ function buildQuery(keywords) {
   return selected.join(' ');
 }
 
-async function searchSongs(query, token) {
+async function searchSongs(query, token, attempt = 1) {
+  if (attempt > 5) {
+    throw new Error('No valid previews found after multiple attempts.');
+  }
+
   try {
     const res = await axios.get('https://api.spotify.com/v1/search', {
       headers: {
@@ -31,17 +35,29 @@ async function searchSongs(query, token) {
       params: {
         q: query,
         type: 'track',
-        limit: 10
+        limit: 20
       }
     });
+    // filter tracks with valid preview
+    const validTracks = res.data.tracks.items.filter(track => track.preview_url);
+
+    if (validTracks.length === 0) {
+      console.warn(`⚠️ Attempt ${attempt}: No valid tracks found. Retrying...`);
+      const newQuery = buildQuery(query.split(' ')); // reuse same keywords randomly
+      return await searchSongs(newQuery, token, attempt + 1);
+    }
+
+    const selected = validTracks[Math.floor(Math.random() * validTracks.length)];
+
+    /*const selected = validTracks[Math.floor(Math.random() * validTracks.length)];
 
     const tracks = res.data.tracks.items;
 
     if (tracks.length === 0) {
       throw new Error('No tracks found.');
-    }
+    } 
 
-    const selected = tracks[Math.floor(Math.random() * tracks.length)];
+    const selected = tracks[Math.floor(Math.random() * tracks.length)]; */
 
     return {
       title: selected.name,
@@ -66,7 +82,7 @@ exports.recommendByMood = async (req, res) => {
   try {
     const token = await getValidAccessToken();
     const query = buildQuery(keywords);
-    const result = await searchSongs(query, token);
+    const result = await searchSongs(query, token, 1);
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -84,7 +100,7 @@ exports.recommendByActivity = async (req, res) => {
   try {
     const token = await getValidAccessToken();
     const query = buildQuery(keywords);
-    const result = await searchSongs(query, token);
+    const result = await searchSongs(query, token, 1);
     res.json(result);
   } catch (err) {
     console.error(err);
