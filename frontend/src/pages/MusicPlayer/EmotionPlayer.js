@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './MusicPlayer.css';
 
-function MusicPlayer() {
+function EmotionPlayer() {
   const { emotion } = useParams();
   const [song, setSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -11,20 +11,20 @@ function MusicPlayer() {
   useEffect(() => {
     fetch(`/api/songs?emotion=${emotion}`)
       .then(res => res.json())
-      .then(data => setSong(data))
+      .then(data => {
+        console.log('Fetched song:', data);
+        setSong(data);
+      })
       .catch(err => {
         console.error('Error loading song:', err);
-        setSong(null); // set to null or keep it
+        setSong(null);
       });
-  }, [emotion]);
+  }, [emotion]); 
+
 
   const togglePlay = () => {
     if (!audioRef.current) return;
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
+    isPlaying ? audioRef.current.pause() : audioRef.current.play();
     setIsPlaying(!isPlaying);
   };
 
@@ -35,7 +35,7 @@ function MusicPlayer() {
         setSong(data);
         setIsPlaying(false);
         setTimeout(() => {
-          if (audioRef.current) audioRef.current.play();
+          audioRef.current?.play();
           setIsPlaying(true);
         }, 100);
       });
@@ -52,18 +52,39 @@ function MusicPlayer() {
 
       <div className="cd-wrapper">
         <img src="/player.gif" alt="cd" className="cd" />
-        <p className="song-name">{song.songName}</p>
+        <p className="songinfo">{song.title}</p>
+        <p className="songinfo">{song.artist || "Unknown Artist"}</p>
       </div>
 
-      <audio ref={audioRef} src={song.songUrl} />
+      <audio ref={audioRef} src={song.preview_url} />
 
       <div className="controls">
-        <button className="control-button">❤️</button>
-        <button className="control-button" onClick={togglePlay}>{isPlaying ? '⏸️' : '▶️'}</button>
-        <button className="control-button" onClick={getNextSong}>⏭️</button>
+        <button className="control-button">
+          <img src="/heart.png" alt="Like" className="control-icon" />
+        </button>
+
+        <button className="control-button" onClick={togglePlay}>
+          <img
+            src= "/playbutton.png" alt="Play" className="control-icon"
+          />
+        </button>
+
+        <button className="control-button" onClick={getNextSong}>
+          <img src="/nextbutton.png" alt="Next" className="control-icon" />
+        </button>
+      </div>
+      <div className="spotify-wrapper">
+        <a
+          href={song.spotify_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="spotify-link"
+        >
+          Listen on Spotify
+        </a>
       </div>
     </div>
   );
 }
 
-export default MusicPlayer; 
+export default EmotionPlayer;

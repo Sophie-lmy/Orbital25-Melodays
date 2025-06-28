@@ -13,7 +13,7 @@
   padding: 30px 30px;
   display: flex;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 .logo {
@@ -39,15 +39,15 @@
 }
 
 .cd {
-  width: 400px;
+  width: 350px;
   max-width: 90vw;
   height: auto;
+  margin-bottom: 20px;
 }
 
-.song-name {
-  font-size: 30px;
-  margin-top: 25px;
-  font-family: 'Georgia', serif;
+.songinfo {
+  font-size: 25px;
+  margin-top: 23px;
 }
 
 .controls {
@@ -62,10 +62,35 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 50px;
+  padding: 20px;
+  border-radius: 50%;
   transition: transform 0.2s ease;
 }
 
 .control-button:hover {
   transform: scale(1.2);
-} 
+}
+
+.control-icon {
+  width: 60px;
+  height:70px;
+  object-fit: contain;
+}
+
+.spotify-wrapper {
+  margin-top: 5px;
+  text-align: center;
+}
+
+.spotify-link {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1db954;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.spotify-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}

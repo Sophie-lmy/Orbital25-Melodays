@@ -4,8 +4,11 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import HomePage from './pages/HomePage/HomePage';
 import MoodPage from './pages/MoodPage/MoodPage';
 import ActivityPage from './pages/ActivityPage/ActivityPage';
-import MusicPlayer from './pages/MusicPlayer/MusicPlayer'; 
 import DailyRec from './pages/DailyRec/DailyRec';
+import EmotionPlayer from './pages/MusicPlayer/EmotionPlayer';
+import ActivityPlayer from './pages/MusicPlayer/ActivityPlayer';
+import DailyPlayer from './pages/MusicPlayer/DailyPlayer';
+
 
 
 function App() {
@@ -15,9 +18,10 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/mood" element={<MoodPage />} />
-        <Route path="/activity" element={<ActivityPage />} />
-        <Route path="/player/:emotion" element={<MusicPlayer />} />
-        <Route path="/daily" element={<DailyRec />} />
+        <Route path="/activity" element={<ActivityPage />} /> 
+        <Route path="/player/:emotion" element={<EmotionPlayer />} />
+        <Route path="/player/:activity" element={<ActivityPlayer />} />
+        <Route path="/daily" element={<DailyPlayer />} />
 
       </Routes>
     </Router>

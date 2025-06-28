@@ -4,10 +4,9 @@ import './ActivityPage.css';
 
 function ActivityPage() {
   const navigate = useNavigate();
-
-  const handleActivityClick = (activity) => {
-    console.log("Selected activity:", activity);
-    navigate(`/player/${activity.toLowerCase()}`);
+  const handleActivityClick = (mood) => {
+    console.log("Selected mood:", mood);
+    navigate(`/player/${mood.toLowerCase()}`); 
   };
 
   const activities = [

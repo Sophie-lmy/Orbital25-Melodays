@@ -7,7 +7,7 @@ function MoodPage() {
 
   const handleMoodClick = (mood) => {
     console.log("Selected mood:", mood);
-    navigate(`/player/${mood.toLowerCase()}`); // Navigate to the player page
+    navigate(`/player/${mood.toLowerCase()}`); 
   };
 
   const moods = [
