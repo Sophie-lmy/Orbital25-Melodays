@@ -10,7 +10,7 @@ function ActivityPage() {
     console.log("Selected activity:", activity);
 
     try {
-      const res = await fetch('http://localhost:3000/recommend/activity', {
+      const res = await fetch(`http://localhost:3000/recommend/activity`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ activity })
