@@ -51,7 +51,7 @@ function MoodPlayer() {
       {/* <audio ref={audioRef} src="/TaylorSwift-BlankSpace.mp3" /> */}
       <audio
         ref={audioRef}
-        src={`/proxy/preview?url=${encodeURIComponent(song.preview_url)}`}
+        src={`https://orbital25-melodays.onrender.com/proxy/preview?url=${encodeURIComponent(song.preview_url)}`}
         onError={() => console.error("Failed to load preview")}
         onCanPlay={() => console.log("Preview is ready to play")}
         onPlay={() => console.log("Playing preview")}
