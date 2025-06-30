@@ -9,7 +9,7 @@ function ActivityPlayer() {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/recommend/activity`, {
+    fetch(`https://orbital25-melodays.onrender.com/recommend/activity`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ activity })

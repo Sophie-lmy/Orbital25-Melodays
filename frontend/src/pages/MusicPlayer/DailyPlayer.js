@@ -8,7 +8,7 @@ function DailyPlayer() {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    fetch('/api/songs/daily')
+    fetch(`https://orbital25-melodays.onrender.com/daily`)
       .then(res => res.json())
       .then(data => {
         console.log('Daily song:', data);

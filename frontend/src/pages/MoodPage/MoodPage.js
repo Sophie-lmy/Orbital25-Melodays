@@ -10,7 +10,7 @@ function MoodPage() {
     console.log("Selected mood:", mood);
 
     try {
-      const res = await fetch('http://localhost:3000/recommend/mood', {
+      const res = await fetch(`https://orbital25-melodays.onrender.com/recommend/mood`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mood })
