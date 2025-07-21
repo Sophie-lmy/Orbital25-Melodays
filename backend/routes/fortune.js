@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const authenticate = require('../middleware/authMiddleware');
 const { getMusicFortune } = require('../controllers/fortuneController');
-const { authenticateToken } = require('../middleware/authMiddleware');
 
-router.post('/', authenticateToken, getMusicFortune);
+router.post('/', authenticate, getMusicFortune);
 
 module.exports = router;
