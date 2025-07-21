@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { getValidAccessToken } = require('../utils/spotifyToken');
+const db = require('../db');
 
 const moodKeywords = {
   happy: ['joyful', 'cheerful', 'sunshine', 'celebration'],
@@ -23,40 +24,36 @@ function buildQuery(keywords) {
 }
 
 async function searchSongs(query, token) {
-  try {
-    const res = await axios.get('https://api.spotify.com/v1/search', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      params: {
-        q: query,
-        type: 'track',
-        limit: 10
-      }
-    });
-
-    const tracks = res.data.tracks.items;
-
-    if (tracks.length === 0) {
-      throw new Error('No tracks found.');
+  const res = await axios.get('https://api.spotify.com/v1/search', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    params: {
+      q: query,
+      type: 'track',
+      limit: 10
     }
+  });
 
-    const selected = tracks[Math.floor(Math.random() * tracks.length)];
+  const tracks = res.data.tracks.items;
 
-    return {
-      title: selected.name,
-      artist: selected.artists[0]?.name,
-      preview_url: selected.preview_url,
-      spotify_url: selected.external_urls.spotify,
-      cover: selected.album.images[0]?.url
-    };
-  } catch (err) {
-    console.error('Search failed:', err.response?.data || err.message);
-    throw new Error('Spotify track search failed.');
+  if (tracks.length === 0) {
+    throw new Error('No tracks found.');
   }
+
+  const selected = tracks[Math.floor(Math.random() * tracks.length)];
+
+  return {
+    title: selected.name,
+    artist: selected.artists[0]?.name,
+    preview_url: selected.preview_url,
+    spotify_url: selected.external_urls.spotify,
+    cover: selected.album.images[0]?.url
+  };
 }
 
 exports.recommendByMood = async (req, res) => {
+  const userId = req.user.id;
   const mood = req.body.mood;
   const keywords = moodKeywords[mood];
   if (!keywords) {
@@ -67,6 +64,13 @@ exports.recommendByMood = async (req, res) => {
     const token = await getValidAccessToken();
     const query = buildQuery(keywords);
     const result = await searchSongs(query, token);
+
+    await db.query(
+      `INSERT INTO diary_entries (user_id, type, recommend_context)
+       VALUES ($1, 'recommend', $2)`,
+      [userId, { mood }]
+    );
+
     res.json(result);
   } catch (err) {
     console.error(err);
@@ -75,6 +79,7 @@ exports.recommendByMood = async (req, res) => {
 };
 
 exports.recommendByActivity = async (req, res) => {
+  const userId = req.user.id;
   const activity = req.body.activity;
   const keywords = activityKeywords[activity];
   if (!keywords) {
@@ -85,6 +90,13 @@ exports.recommendByActivity = async (req, res) => {
     const token = await getValidAccessToken();
     const query = buildQuery(keywords);
     const result = await searchSongs(query, token);
+
+    await db.query(
+      `INSERT INTO diary_entries (user_id, type, recommend_context)
+       VALUES ($1, 'recommend', $2)`,
+      [userId, { activity }]
+    );
+
     res.json(result);
   } catch (err) {
     console.error(err);

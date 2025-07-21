@@ -26,6 +26,7 @@ const searchSongs = async (query, token) => {
       artist: selected.artists[0]?.name,
       preview_url: selected.preview_url,
       spotify_url: selected.external_urls.spotify,
+      spotify_uri: selected.uri,
       cover: selected.album.images[0]?.url
     };
   } catch (err) {

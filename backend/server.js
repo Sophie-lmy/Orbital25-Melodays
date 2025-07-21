@@ -6,6 +6,10 @@ const initDatabase = require("./db/init");
 const authRoutes = require("./routes/auth");
 const recommendRoutes = require("./routes/recommend");
 const dailyRoutes = require("./routes/daily");
+const diaryRoutes = require("./routes/diary");
+const songRoutes = require("./routes/songs");
+const fortuneRoutes = require("./routes/fortune");
+const spotifyRoutes = require("./routes/spotify");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -16,6 +20,10 @@ app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/recommend", recommendRoutes);
 app.use("/daily", dailyRoutes);
+app.use("/diary", diaryRoutes);
+app.use("/songs", songRoutes);
+app.use("/fortune", fortuneRoutes);
+app.use("/spotify", spotifyRoutes);
 
 initDatabase();
 
