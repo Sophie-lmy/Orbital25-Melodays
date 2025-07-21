@@ -1,5 +1,5 @@
-const axios = require('axios');
-const { getValidAccessToken } = require('../utils/spotifyToken');
+const { searchSongs } = require('../models/songModel');
+const userModel = require('../models/userModel');
 const db = require('../db');
 
 const moodKeywords = {
@@ -19,49 +19,23 @@ const activityKeywords = {
 };
 
 function buildQuery(keywords) {
-  const selected = keywords.sort(() => 0.5 - Math.random()).slice(0, Math.ceil(Math.random() * 3));
+  const selected = keywords
+    .sort(() => 0.5 - Math.random())
+    .slice(0, Math.ceil(Math.random() * 3));
   return selected.join(' ');
-}
-
-async function searchSongs(query, token) {
-  const res = await axios.get('https://api.spotify.com/v1/search', {
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
-    params: {
-      q: query,
-      type: 'track',
-      limit: 10
-    }
-  });
-
-  const tracks = res.data.tracks.items;
-
-  if (tracks.length === 0) {
-    throw new Error('No tracks found.');
-  }
-
-  const selected = tracks[Math.floor(Math.random() * tracks.length)];
-
-  return {
-    title: selected.name,
-    artist: selected.artists[0]?.name,
-    preview_url: selected.preview_url,
-    spotify_url: selected.external_urls.spotify,
-    cover: selected.album.images[0]?.url
-  };
 }
 
 exports.recommendByMood = async (req, res) => {
   const userId = req.user.id;
   const mood = req.body.mood;
   const keywords = moodKeywords[mood];
+
   if (!keywords) {
     return res.status(400).json({ error: 'Invalid or missing mood.' });
   }
 
   try {
-    const token = await getValidAccessToken();
+    const token = await userModel.getValidAccessToken(userId);
     const query = buildQuery(keywords);
     const result = await searchSongs(query, token);
 
@@ -82,12 +56,13 @@ exports.recommendByActivity = async (req, res) => {
   const userId = req.user.id;
   const activity = req.body.activity;
   const keywords = activityKeywords[activity];
+
   if (!keywords) {
     return res.status(400).json({ error: 'Invalid or missing activity.' });
   }
 
   try {
-    const token = await getValidAccessToken();
+    const token = await userModel.getValidAccessToken(userId);
     const query = buildQuery(keywords);
     const result = await searchSongs(query, token);
 

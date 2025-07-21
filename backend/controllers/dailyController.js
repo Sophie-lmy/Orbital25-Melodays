@@ -1,6 +1,5 @@
-const axios = require("axios");
-const { getValidAccessToken } = require("../utils/spotifyToken");
 const userModel = require("../models/userModel");
+const { searchSongs } = require("../models/songModel");
 
 const keywordPool = {
   season: {
@@ -8,12 +7,6 @@ const keywordPool = {
     summer: ["sun", "beach", "freedom", "heat", "blue sky"],
     autumn: ["leaves", "wind", "nostalgia", "amber", "quiet"],
     winter: ["snow", "fireplace", "cozy", "chill", "blanket"]
-  },
-  timeOfDay: {
-    morning: ["sunrise", "coffee", "new day", "bright", "calm"],
-    afternoon: ["energy", "sunshine", "movement", "light"],
-    evening: ["sunset", "slow", "reflection", "orange sky", "cool breeze"],
-    night: ["stars", "moon", "dream", "silence", "melody"]
   },
   general: [
     "love", "lonely", "happy", "sad", "dance", "sleep", "hope",
@@ -30,22 +23,13 @@ function getCurrentSeason(date = new Date()) {
   return "autumn";
 }
 
-function getTimeOfDay(hour) {
-  if (hour < 11) return "morning";
-  if (hour < 17) return "afternoon";
-  if (hour < 20) return "evening";
-  return "night";
-}
-
 function buildSmartQuery() {
   const now = new Date();
   const season = getCurrentSeason(now);
-  const timeOfDay = getTimeOfDay(now.getHours());
 
   const combinedPool = [
     ...keywordPool.general,
-    ...keywordPool.season[season],
-    ...keywordPool.timeOfDay[timeOfDay]
+    ...keywordPool.season[season]
   ];
 
   const selected = sampleRandomWords(combinedPool, 2 + Math.floor(Math.random() * 2));
@@ -55,29 +39,6 @@ function buildSmartQuery() {
 function sampleRandomWords(arr, count) {
   const shuffled = arr.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
-}
-
-async function getTimeBasedRecommendedTrack(token) {
-  const query = buildSmartQuery();
-
-  const res = await axios.get("https://api.spotify.com/v1/search", {
-    headers: { Authorization: `Bearer ${token}` },
-    params: { q: query, type: "track", limit: 20 }
-  });
-
-  const tracks = res.data.tracks.items;
-  if (!tracks.length) throw new Error("No tracks found.");
-
-  const track = tracks[Math.floor(Math.random() * tracks.length)];
-
-  return {
-    title: track.name,
-    artist: track.artists.map(a => a.name).join(", "),
-    preview_url: track.preview_url,
-    spotify_url: track.external_urls.spotify,
-    spotify_uri: track.uri,
-    cover: track.album.images[0]?.url
-  };
 }
 
 exports.getDailyRecommendation = async (req, res) => {
@@ -98,8 +59,9 @@ exports.getDailyRecommendation = async (req, res) => {
       return res.json(user.daily_recommendation);
     }
 
-    const token = await getValidAccessToken();
-    const song = await getTimeBasedRecommendedTrack(token);
+    const token = await userModel.getValidAccessToken(userId);
+    const query = buildSmartQuery();
+    const song = await searchSongs(query, token);
 
     await userModel.updateDailyRecommendation(userId, today, song);
 

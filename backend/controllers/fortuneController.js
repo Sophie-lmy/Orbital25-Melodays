@@ -1,6 +1,6 @@
-const axios = require('axios');
 const db = require('../db');
-const { getValidAccessToken } = require('../utils/spotifyToken');
+const { searchSongs } = require('../models/songModel');
+const userModel = require('../models/userModel');
 
 const validThemes = ["love", "career", "choice", "self-discovery"];
 
@@ -13,34 +13,9 @@ exports.getMusicFortune = async (req, res) => {
   }
 
   try {
-    const token = await getValidAccessToken();
+    const token = await userModel.getValidAccessToken(userId);
     const query = `${type} ${question}`;
-
-    const playlistRes = await axios.get('https://api.spotify.com/v1/search', {
-      headers: { Authorization: `Bearer ${token}` },
-      params: { q: query, type: 'playlist', limit: 5 }
-    });
-
-    const playlists = playlistRes.data.playlists.items;
-    if (!playlists.length) {
-      return res.status(404).json({ error: 'No playlist found for this question.' });
-    }
-
-    const chosenPlaylist = playlists[Math.floor(Math.random() * playlists.length)];
-    const tracksRes = await axios.get(
-      `https://api.spotify.com/v1/playlists/${chosenPlaylist.id}/tracks`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-        params: { limit: 20 }
-      }
-    );
-
-    const tracks = tracksRes.data.items.filter(item => item.track);
-    if (!tracks.length) {
-      return res.status(404).json({ error: 'No tracks found in selected playlist.' });
-    }
-
-    const track = tracks[Math.floor(Math.random() * tracks.length)].track;
+    const result = await searchSongs(query, token);
 
     await db.query(
       `INSERT INTO diary_entries (
@@ -50,22 +25,23 @@ exports.getMusicFortune = async (req, res) => {
       [
         userId,
         question,
-        track.id,
-        track.name,
-        track.artists.map(a => a.name).join(', '),
-        track.album.name,
-        track.album.images[0]?.url
+        result.id,
+        result.title,
+        result.artist,
+        result.album,
+        result.cover
       ]
     );
 
     res.json({
-      track_name: track.name,
-      artist_name: track.artists.map(a => a.name).join(', '),
-      album_name: track.album.name,
-      album_image_url: track.album.images[0]?.url,
-      spotify_track_id: track.id,
-      preview_url: track.preview_url,
-      external_url: track.external_urls.spotify
+      track_name: result.title,
+      artist_name: result.artist,
+      album_name: result.album,
+      album_image_url: result.cover,
+      spotify_track_id: result.id,
+      preview_url: result.preview_url,
+      external_url: result.spotify_url,
+      spotify_uri: result.spotify_uri
     });
   } catch (err) {
     console.error('Fortune error:', err.response?.data || err.message);
