@@ -7,12 +7,16 @@ import ActivityPage from './pages/ActivityPage/ActivityPage';
 import MoodPlayer from './pages/MusicPlayer/MoodPlayer';
 import ActivityPlayer from './pages/MusicPlayer/ActivityPlayer';
 import DailyPlayer from './pages/MusicPlayer/DailyPlayer';
+import SetupAccount from './pages/SetupAccount/SetupAccount';
+import SpotifyCallback from './pages/SpotifyCallback';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} /> 
+        <Route path="/" element={<SetupAccount />} />
+        <Route path="/spotify-callback" element={<SpotifyCallback />} /> 
         <Route path="/home" element={<HomePage />} />
         <Route path="/mood" element={<MoodPage />} />
         <Route path="/activity" element={<ActivityPage />} />
