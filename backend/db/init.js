@@ -8,14 +8,20 @@ async function initDatabase() {
         username VARCHAR(100) NOT NULL,
         email VARCHAR(100) UNIQUE NOT NULL,
         password TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        daily_recommendation JSONB,
-        daily_recommendation_date DATE,
-        spotify_access_token TEXT,
-        spotify_refresh_token TEXT
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
     console.log('Users table created or already exists.');
+
+    await pool.query(`
+      ALTER TABLE users
+      ADD COLUMN IF NOT EXISTS daily_recommendation JSONB,
+      ADD COLUMN IF NOT EXISTS daily_recommendation_date DATE,
+      ADD COLUMN IF NOT EXISTS spotify_access_token TEXT,
+      ADD COLUMN IF NOT EXISTS spotify_refresh_token TEXT,
+      ADD COLUMN IF NOT EXISTS spotify_token_updated_at TIMESTAMP;
+    `);
+    console.log('Users table columns ensured.');
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS liked_songs (
