@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 const { hashPassword, comparePassword } = require("../utils/hash");
 
@@ -23,6 +24,13 @@ exports.login = async (req, res) => {
     if (!user || !(await comparePassword(password, user.password))) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
+
+    const accessToken = jwt.sign(
+      { id: user.id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
     res.status(200).json({
       message: "Login successful.",
       user: {
@@ -30,6 +38,7 @@ exports.login = async (req, res) => {
         username: user.username,
         email: user.email,
       },
+      accessToken
     });
   } catch (err) {
     res.status(500).json({ message: "Login failed." });
