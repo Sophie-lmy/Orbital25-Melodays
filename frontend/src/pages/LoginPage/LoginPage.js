@@ -30,7 +30,7 @@ function LoginPage() {
 
       if (response.ok) {
         alert(`${isLogin ? 'Login' : 'Sign up'} successful!`);
-        navigate('/home');
+        navigate('/SetupAccount');
       } else {
         alert(data.message || `${isLogin ? 'Login' : 'Sign up'} failed.`);
       }
