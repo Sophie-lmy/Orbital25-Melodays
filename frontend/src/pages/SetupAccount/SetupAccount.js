@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import './SetupAccount.css';
 
 function SetupAccount() {
   const [username, setUsername] = useState('');
-  const routerLocation = useLocation();
-  const userId = routerLocation.state?.userId;
   const [isLoading, setIsLoading] = useState(true);
 
   // fetch existing user name
@@ -88,6 +85,8 @@ function SetupAccount() {
       console.error(err);
     }
   };
+
+  if (isLoading) return <div>Loading...</div>; 
 
   return (
     <div className="setup-container">

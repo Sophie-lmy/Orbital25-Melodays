@@ -40,7 +40,7 @@
 }
 
 .sidebar-links a {
-  text-decoration: none;
+  text-decoration: underline;
   color: white;
   font-size: 18px;
 }

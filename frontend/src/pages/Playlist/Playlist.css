@@ -1,24 +1,26 @@
 .profile-container {
   display: flex;
-  padding: 2rem;
-  gap: 3rem;
+  height: 100vh;
   font-family: 'Georgia', serif;
 }
 
 .left-panel {
-  width: 25%;
-  background-color: #f7f7f7;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  width: 30%;
+  background-color: black;
+  color: white;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
 }
 
 .right-panel {
-  width: 70%;
-  background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  flex: 1;
+  background-color: #6600cc;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 45px;
+  justify-content: center;
 }
 
 .right-panel ul {
@@ -29,4 +31,12 @@
 .right-panel li {
   margin-bottom: 10px;
   line-height: 1.4;
+}
+
+.playlist-logo {
+  width: 320px;            
+  height: auto;            
+  margin-bottom: 20px;           
+  margin-left: auto;       
+  margin-right: auto;
 }

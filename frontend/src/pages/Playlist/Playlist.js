@@ -31,6 +31,7 @@ function Playlist() {
   return (
     <div className="profile-container">
       <div className="left-panel">
+        <img src="/logoblack.jpg" alt="Melodays Logo" className="playlist-logo" />
         <p>{username}'s Music Shelf</p>
       </div>
 

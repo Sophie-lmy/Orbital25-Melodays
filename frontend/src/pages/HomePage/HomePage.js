@@ -11,7 +11,7 @@ function HomePage() {
         <p className="subtitle">A personalized, emotional music discovery platform.</p>
 
         <div className="sidebar-links">
-          <a href="/profile">My Profile</a>
+          <a href="/playlist">My Playlist</a>
           <a href="/logout">Log out</a>
         </div>
       </div>
@@ -22,7 +22,7 @@ function HomePage() {
         <a href="/activity" className="feature-card">🏃 Activity Beats</a>
         <a href="/daily" className="feature-card">🌅 Song of the Day</a>
         <a href="/fortune" className="feature-card">🔮 Let Music Answer</a>
-        <a href="/music-history" className="feature-card">📔 Music Journal</a>
+        <a href="/music-history" className="feature-card">📔 Music Log</a>
       </div>
     </div>
   );
