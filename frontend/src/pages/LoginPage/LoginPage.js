@@ -8,15 +8,14 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const endpoint = isLogin ? 'login' : 'register';
     const defaultUsername = email.split('@')[0];
 
     const body = isLogin
-     ? { email, password }
-     : { username: defaultUsername, email, password };
+      ? { email, password }
+      : { username: defaultUsername, email, password };
 
     try {
       const response = await fetch(`https://orbital25-melodays.onrender.com/auth/${endpoint}`, {
@@ -26,11 +25,12 @@ function LoginPage() {
       });
 
       const data = await response.json();
-      console.log(`${endpoint} response:`, data);
 
       if (response.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
         alert(`${isLogin ? 'Login' : 'Sign up'} successful!`);
-        navigate('/SetupAccount');
+        navigate('/setupaccount');
       } else {
         alert(data.message || `${isLogin ? 'Login' : 'Sign up'} failed.`);
       }
@@ -38,7 +38,6 @@ function LoginPage() {
       console.error(`${endpoint} error:`, error);
     }
   };
-
 
   return (
     <div className="login-container">
