@@ -19,8 +19,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/*<Route path="/" element={<LoginPage />} />  */}
-        <Route path="/" element={<SetupAccount />} />
+        <Route path="/" element={<LoginPage />} />  
+        <Route path="/SetupAccount" element={<SetupAccount />} />
         <Route path="/spotify-callback" element={<SpotifyCallback />} /> 
         <Route path="/home" element={<HomePage />} />
         <Route path="/mood" element={<MoodPage />} />
