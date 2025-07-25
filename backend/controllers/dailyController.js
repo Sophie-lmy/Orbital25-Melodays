@@ -42,7 +42,7 @@ function sampleRandomWords(arr, count) {
 }
 
 exports.getDailyRecommendation = async (req, res) => {
-  const userId = req.body.userId;
+  const userId = req.user.id;
   if (!userId) return res.status(400).json({ error: "Missing user ID." });
 
   try {
