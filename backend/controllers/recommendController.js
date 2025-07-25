@@ -26,11 +26,13 @@ function buildQuery(keywords) {
 }
 
 async function getValidSong(keywords, token, maxAttempts = 5) {
+  if (!token) return null;
+
   let attempt = 0;
   while (attempt < maxAttempts) {
     const query = buildQuery(keywords);
     const result = await searchSongs(query, token);
-    if (result && result.id && result.name) {
+    if (result && result.id && result.title) {
       return result;
     }
     attempt++;
@@ -49,8 +51,11 @@ exports.recommendByMood = async (req, res) => {
 
   try {
     const token = await userModel.getValidAccessToken(userId);
-    const track = await getValidSong(keywords, token);
+    if (!token) {
+      return res.status(401).json({ error: 'Spotify not linked or token expired.' });
+    }
 
+    const track = await getValidSong(keywords, token);
     if (!track) {
       return res.status(500).json({ error: 'Failed to get valid recommendation after retries.' });
     }
@@ -62,10 +67,10 @@ exports.recommendByMood = async (req, res) => {
       [
         userId,
         track.id,
-        track.name,
-        track.artists?.[0]?.name || '',
-        track.album?.name || '',
-        track.album?.images?.[0]?.url || '',
+        track.title,
+        track.artist,
+        track.album,
+        track.cover,
         { mood }
       ]
     );
@@ -88,8 +93,11 @@ exports.recommendByActivity = async (req, res) => {
 
   try {
     const token = await userModel.getValidAccessToken(userId);
-    const track = await getValidSong(keywords, token);
+    if (!token) {
+      return res.status(401).json({ error: 'Spotify not linked or token expired.' });
+    }
 
+    const track = await getValidSong(keywords, token);
     if (!track) {
       return res.status(500).json({ error: 'Failed to get valid recommendation after retries.' });
     }
@@ -101,10 +109,10 @@ exports.recommendByActivity = async (req, res) => {
       [
         userId,
         track.id,
-        track.name,
-        track.artists?.[0]?.name || '',
-        track.album?.name || '',
-        track.album?.images?.[0]?.url || '',
+        track.title,
+        track.artist,
+        track.album,
+        track.cover,
         { activity }
       ]
     );

@@ -9,7 +9,7 @@ const searchSongs = async (query, token) => {
 
     const playlists = playlistRes.data.playlists.items;
     if (!playlists.length) {
-      throw new Error('No playlist found for this query.');
+      return null;
     }
 
     const chosenPlaylist = playlists[Math.floor(Math.random() * playlists.length)];
@@ -24,7 +24,7 @@ const searchSongs = async (query, token) => {
 
     const tracks = tracksRes.data.items.filter(item => item.track);
     if (!tracks.length) {
-      throw new Error('No tracks found in selected playlist.');
+      return null;
     }
 
     const track = tracks[Math.floor(Math.random() * tracks.length)].track;
@@ -41,7 +41,7 @@ const searchSongs = async (query, token) => {
     };
   } catch (err) {
     console.error('Failed to search playlist-based songs:', err.response?.data || err.message);
-    throw new Error('Spotify playlist-based search failed.');
+    return null;
   }
 };
 
