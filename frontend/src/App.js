@@ -9,13 +9,18 @@ import ActivityPlayer from './pages/MusicPlayer/ActivityPlayer';
 import DailyPlayer from './pages/MusicPlayer/DailyPlayer';
 import SetupAccount from './pages/SetupAccount/SetupAccount';
 import SpotifyCallback from './pages/SpotifyCallback';
+import FortunePage from './pages/FortunePage/FortunePage';
+import AskPage from './pages/AskPage/AskPage';
+import FortunePlayer from './pages/FortunePlayer/FortunePlayer';
+import MusicHistory from './pages/MusicHistory/MusicHistory';
+import DiaryDetails from './pages/DiaryDetails/DiaryDetails';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} /> 
-        <Route path="/SetupAccount" element={<SetupAccount />} />
+        {/*<Route path="/" element={<LoginPage />} />  */}
+        <Route path="/" element={<SetupAccount />} />
         <Route path="/spotify-callback" element={<SpotifyCallback />} /> 
         <Route path="/home" element={<HomePage />} />
         <Route path="/mood" element={<MoodPage />} />
@@ -23,6 +28,12 @@ function App() {
         <Route path="/player" element={<MoodPlayer />} />
         <Route path="/player/activity" element={<ActivityPlayer />} />
         <Route path="/daily" element={<DailyPlayer />} />
+        <Route path="/fortune" element={<FortunePage />} />
+        <Route path="/ask" element={<AskPage />} />
+        <Route path="/fortune-player" element={<FortunePlayer />} />
+        <Route path="/music-history" element={<MusicHistory />} />
+        <Route path="/diary" element={<DiaryDetails />} /> 
+
       </Routes>
     </Router>
   );

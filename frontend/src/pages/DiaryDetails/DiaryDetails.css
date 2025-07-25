@@ -1,0 +1,89 @@
+.diary-detail-page {
+  margin: 0;
+  font-family: Georgia, serif;
+  color: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #6600cc;
+}
+
+.diary-header {
+  background-color: black;
+  padding: 30px 30px;
+  align-items: center;
+  display: flex; 
+}
+
+.logo {
+  height: 60px;     
+  width: auto;      
+}
+
+.tagline {
+  font-size: 15px;
+  display: flex;
+}
+
+.diary-detail-container {
+  background: white;
+  max-width: 1300px;
+  width: 85%;       
+  margin: auto;
+  padding: 3rem;
+  border-radius: 12px;
+  color: black;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.entry-time {
+  font-size: 1.15rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+  margin-top: 1.3rem;
+}
+
+p {
+  margin: 0.5rem 0;
+  line-height: 1.3;
+  font-size: 1.2rem;
+}
+
+.comment-label {
+  display: block;
+  margin-top: 1.8rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+textarea {
+  width: 100%;
+  padding: 0.7rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: vertical;
+}
+
+.button-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.button-row button {
+  flex: 1;
+  background-color: black;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+

@@ -1,0 +1,102 @@
+.fortune-player {
+  margin: 0;
+  font-family: Georgia, serif;
+  color: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #6600cc;
+}
+
+.fortune-header {
+  background-color: black;
+  padding: 30px 30px;
+  align-items: center;
+  display: flex; 
+}
+
+.logo {
+  height: 60px;     
+  width: auto;      
+}
+
+.tagline {
+  font-size: 15px;
+  display: flex;
+}
+
+.player-content {
+  display: flex;
+  margin-top: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;          
+  gap: 18rem; 
+}
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tarot-img {
+  width: 330px;
+  border-radius: 13px;
+}
+
+.user-question {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.album-art {
+  width: 280px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.song-title {
+  font-size: 2rem;
+  margin: 0.6rem 0 0;
+}
+
+.artist-name {
+  font-size: 1.6rem;
+  margin: 1rem 2;
+}
+
+.controls {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.play-btn,
+.like-btn {
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.spotify-link {
+  font-size: 20px;
+  color: #1db954;
+  transition: opacity 0.2s ease;
+}
+
+.spotify-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}

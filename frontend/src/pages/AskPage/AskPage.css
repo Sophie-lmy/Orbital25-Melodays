@@ -1,0 +1,75 @@
+.ask-container {
+  margin: 0;
+  font-family: Georgia, serif;
+  color: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #6600cc;
+}
+
+.ask-header {
+  background-color: black;
+  padding: 30px 30px;
+  align-items: center;
+  display: flex; 
+}
+
+.logo {
+  height: 60px;     
+  width: auto;      
+}
+
+.tagline {
+  font-size: 15px;
+  display: flex;
+}
+
+.ask-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5rem;
+  gap: 8rem;
+  max-width: 900px;
+  margin-left: 150px;
+}
+
+.ask-card-img {
+  width: 300px;
+  border-radius: 12px;
+}
+
+.ask-form {
+  text-align: left;
+}
+
+.ask-form h2 {
+  font-size: 2.4rem;
+  margin-bottom: 3rem;
+}
+
+.ask-form textarea {
+  width: 100%;
+  height: 130px;
+  font-size: 1rem;
+  padding: 1.5rem;
+  border-radius: 11px;
+}
+
+.ask-form button {
+  margin-top: 5rem;
+  width: 100%;
+  padding: 1rem;
+  background-color: black;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 11px;
+  cursor: pointer;
+}
+
+.ask-form button:hover {
+  background-color: #222;
+}

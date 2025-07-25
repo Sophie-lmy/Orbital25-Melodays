@@ -6,6 +6,7 @@ function ActivityPlayer() {
   const { activity } = useParams();
   const [song, setSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [liked, setLiked] = useState(false);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -45,24 +46,6 @@ function ActivityPlayer() {
     }
   };
 
-  const getNextSong = () => {
-    fetch(`http://localhost:3000/recommend/activity`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ activity })
-    })
-      .then(res => res.json())
-      .then(data => {
-        setSong(data);
-        if (audioRef.current) {
-          audioRef.current.load();
-        }
-        setIsPlaying(false);
-      })
-      .catch(err => {
-        console.error('Failed to get next song:', err);
-      });
-  };
 
   if (!song) {
     return <div className="music-player">Loading...</div>;
@@ -76,7 +59,7 @@ function ActivityPlayer() {
       </div>
 
       <div className="cd-wrapper">
-        <img src="/player.gif" alt="cd" className="cd" />
+        <img src={song.cover || "/player.gif"} alt="Album Cover" className="cd" />
         <p className="songinfo">{song.title}</p>
         <p className="songinfo">{song.artist || "Unknown Artist"}</p>
       </div>
@@ -84,20 +67,20 @@ function ActivityPlayer() {
       <audio ref={audioRef} src={song.preview_url} />
 
       <div className="controls">
-        <button className="control-button">
-          <img src="/heart.png" alt="Like" className="control-icon" />
-        </button>
-
-        <button className="control-button" onClick={togglePlay}>
+        <button className="control-button" onClick={() => setLiked(!liked)}>
           <img
-            src="/playbutton.png"
-            alt={isPlaying ? "Pause" : "Play"}
+            src={liked ? "/redheart.png" : "/heart.png"}
+            alt={liked ? "Liked" : "Like"}
             className="control-icon"
           />
         </button>
 
-        <button className="control-button" onClick={getNextSong}>
-          <img src="/nextbutton.png" alt="Next" className="control-icon" />
+        <button className="control-button" onClick={togglePlay}>
+          <img
+            src={isPlaying ? "/pausebutton.png" : "/playbutton.png"}
+            alt={isPlaying ? "Pause" : "Play"}
+            className="control-icon"
+          />
         </button>
       </div>
 

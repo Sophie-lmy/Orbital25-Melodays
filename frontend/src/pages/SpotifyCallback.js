@@ -1,36 +1,25 @@
 import { useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function SpotifyCallback() {
-  const [params] = useSearchParams();
+function SpotifyRedirect() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const code = params.get('code');
-    const state = params.get('state'); 
+    const params = new URLSearchParams(window.location.search);
+    const accessToken = params.get('access_token');
+    const expiresIn = params.get('expires_in');
 
-    //sends code and userId to backend
-    const exchangeSpotifyCode = async () => {
-      const res = await fetch('/api/spotify/callback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, userId: state }),
-      });
+    if (accessToken) {
+      localStorage.setItem('spotify_access_token', accessToken);
+      localStorage.setItem('spotify_token_expiry', Date.now() + parseInt(expiresIn) * 1000);
+      navigate('/home');
+    } else {
+      alert('Spotify login failed.');
+      navigate('/');
+    }
+  }, [navigate]);
 
-      if (res.ok) {
-        const data = await res.json();
-        alert('Spotify linked successfully!');
-        navigate('/HomePage'); 
-      } else {
-        alert('Failed to link Spotify');
-        navigate('/SetupAccount');
-      }
-    };
-
-    if (code && state) exchangeSpotifyCode();
-  }, [params, navigate]);
-
-  return <div>Linking Spotify...</div>;
+  return <div>Authenticating Spotify...</div>;
 }
 
-export default SpotifyCallback;
+export default SpotifyRedirect;

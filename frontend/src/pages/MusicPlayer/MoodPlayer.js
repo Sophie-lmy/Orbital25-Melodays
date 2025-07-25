@@ -6,6 +6,7 @@ function MoodPlayer() {
   const location = useLocation();
   const song = location.state?.song;
   const [isPlaying, setIsPlaying] = useState(false);
+  const [liked, setLiked] = useState(false);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -32,7 +33,7 @@ function MoodPlayer() {
   };
 
   if (!song) {
-    return <div className="music-player">No song found. Please go back and select a mood.</div>;
+    return <div className="music-player">Loading...</div>;
   }
 
   return (
@@ -43,7 +44,7 @@ function MoodPlayer() {
       </div>
 
       <div className="cd-wrapper">
-        <img src="/player.gif" alt="cd" className="cd" />
+        <img src={song.cover || "/player.gif"} alt="Album Cover" className="cd" />
         <p className="songinfo">{song.title}</p>
         <p className="songinfo">{song.artist || "Unknown Artist"}</p>
       </div>
@@ -55,18 +56,22 @@ function MoodPlayer() {
         onError={() => console.error("Failed to load preview")}
         onCanPlay={() => console.log("Preview is ready to play")}
         onPlay={() => console.log("Playing preview")}
-        onPause={() => console.log("⏸Paused")}
+        onPause={() => console.log("Paused")}
         controls={false}
       />
 
       <div className="controls">
-        <button className="control-button">
-          <img src="/heart.png" alt="Like" className="control-icon" />
+        <button className="control-button" onClick={() => setLiked(!liked)}>
+          <img
+            src={liked ? "/redheart.png" : "/heart.png"}
+            alt={liked ? "Liked" : "Like"}
+            className="control-icon"
+          />
         </button>
 
         <button className="control-button" onClick={togglePlay}>
           <img
-            src="/playbutton.png"
+            src={isPlaying ? "/pausebutton.png" : "/playbutton.png"}
             alt={isPlaying ? "Pause" : "Play"}
             className="control-icon"
           />

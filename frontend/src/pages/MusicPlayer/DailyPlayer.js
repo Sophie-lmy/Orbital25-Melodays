@@ -5,6 +5,7 @@ import './MusicPlayer.css';
 function DailyPlayer() {
   const [song, setSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [liked, setLiked] = useState(false);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -26,19 +27,6 @@ function DailyPlayer() {
     setIsPlaying(!isPlaying);
   };
 
-  const getNextSong = () => {
-    fetch('/api/songs/daily?next=true')
-      .then(res => res.json())
-      .then(data => {
-        setSong(data);
-        setIsPlaying(false);
-        setTimeout(() => {
-          audioRef.current?.play();
-          setIsPlaying(true);
-        }, 100);
-      });
-  };
-
   if (!song) return <div className="music-player">Loading...</div>;
 
   return (
@@ -57,20 +45,21 @@ function DailyPlayer() {
       <audio ref={audioRef} src={song.preview_url} />
 
       <div className="controls">
-        <button className="control-button">
-          <img src="/heart.png" alt="Like" className="control-icon" />
+        <button className="control-button" onClick={() => setLiked(!liked)}>
+          <img
+            src={liked ? "/redheart.png" : "/heart.png"}
+            alt={liked ? "Liked" : "Like"}
+            className="control-icon"
+          />
         </button>
 
         <button className="control-button" onClick={togglePlay}>
           <img
-            src= "/playbutton.png" alt="Play" className="control-icon"
+            src= {isPlaying ? "/pausebutton.png" : "/playbutton.png"} alt="Play" className="control-icon"
           />
         </button>
-
-        <button className="control-button" onClick={getNextSong}>
-          <img src="/nextbutton.png" alt="Next" className="control-icon" />
-        </button>
       </div>
+
       <div className="spotify-wrapper">
         <a
           href={song.spotify_url}
