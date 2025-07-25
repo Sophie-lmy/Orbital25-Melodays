@@ -7,12 +7,20 @@ function MoodPage() {
 
   const handleMoodClick = async (moodLabel) => {
     const mood = moodLabel.toLowerCase();
-    console.log("Selected mood:", mood);
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('Please log in first.');
+      return;
+    }
 
     try {
       const res = await fetch(`https://orbital25-melodays.onrender.com/recommend/mood`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ mood })
       });
 

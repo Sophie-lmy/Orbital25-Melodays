@@ -8,12 +8,22 @@ function SetupAccount() {
   const userId = routerLocation.state?.userId;
   const [isLoading, setIsLoading] = useState(true);
 
-  //fetch existing username
+  // fetch existing user name
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!userId) return;
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        const res = await fetch(`https://orbital25-melodays.onrender.com/auth/get-profile?userId=${userId}`);
+        const res = await fetch('https://orbital25-melodays.onrender.com/auth/get-profile', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
         const data = await res.json();
         if (res.ok && data.username) {
           setUsername(data.username);
@@ -26,7 +36,7 @@ function SetupAccount() {
     };
 
     fetchProfile();
-  }, [userId]);
+  }, []);
 
   const handleSave = async () => {
     const token = localStorage.getItem('token');
@@ -83,9 +93,10 @@ function SetupAccount() {
     <div className="setup-container">
       <form className="setup-form" onSubmit={(e) => e.preventDefault()}>
         <img src="/logopurple.jpg" alt="Logo" className="setup-logo" />
-      
-        <label classname ='setup-label'>Username</label>
-        <input classname='setup-input'
+
+        <label className="setup-label">Username</label>
+        <input
+          className="setup-input"
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}

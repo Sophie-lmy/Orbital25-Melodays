@@ -7,12 +7,20 @@ function ActivityPage() {
 
   const handleActivityClick = async (activityLabel) => {
     const activity = activityLabel.toLowerCase();
-    console.log("Selected activity:", activity);
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('Please log in first.');
+      return;
+    }
 
     try {
       const res = await fetch(`https://orbital25-melodays.onrender.com/recommend/activity`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ activity })
       });
 
