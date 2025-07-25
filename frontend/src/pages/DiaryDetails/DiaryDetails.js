@@ -9,25 +9,43 @@ const DiaryDetail = () => {
   const [comment, setComment] = useState('');
 
   useEffect(() => {
-    // Mock entry for preview
-    const mock = {
-      id,
-      type: 'fortune',
-      question: 'Will I find love soon?',
-      track_name: 'Imagine',
-      artist_name: 'John Lennon',
-      album_name: 'Imagine',
-      external_url: 'https://open.spotify.com/track/mock-id',
-      created_at: new Date().toISOString(),
-      comment: 'It really spoke to me.'
-    };
-    setEntry(mock);
-    setComment(mock.comment);
-  }, [id]);
-
-  const handleCommentSave = () => {
-    alert('Comment saved!');
+  const fetchEntry = async () => {
+    try {
+      const res = await fetch(`https://orbital25-melodays.onrender.com/diary/${id}`);
+      if (!res.ok) throw new Error("Failed to fetch diary entry");
+      const data = await res.json();
+      setEntry(data);
+      setComment(data.comment || '');
+    } catch (err) {
+      console.error(err);
+      alert("Could not load diary entry.");
+    }
   };
+
+  fetchEntry();
+}, [id]);
+
+
+  const handleCommentSave = async () => {
+  try {
+    const res = await fetch(`https://orbital25-melodays.onrender.com/diary/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ note: comment }),
+    });
+
+    if (!res.ok) {
+      throw new Error('Failed to save comment');
+    }
+
+    alert('Comment saved!');
+  } catch (err) {
+    console.error(err);
+    alert('Error saving comment');
+  }
+};
 
   if (!entry) return <div className="diary-detail-page">Loading...</div>;
 
