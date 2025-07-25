@@ -22,7 +22,7 @@ function HomePage() {
         <a href="/activity" className="feature-card">🏃 Activity Beats</a>
         <a href="/daily" className="feature-card">🌅 Song of the Day</a>
         <a href="/fortune" className="feature-card">🔮 Let Music Answer</a>
-        <a href="/journal" className="feature-card">📔 Music Journal</a>
+        <a href="/music-history" className="feature-card">📔 Music Journal</a>
       </div>
     </div>
   );
