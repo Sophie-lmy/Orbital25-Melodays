@@ -8,7 +8,7 @@ import MoodPlayer from './pages/MusicPlayer/MoodPlayer';
 import ActivityPlayer from './pages/MusicPlayer/ActivityPlayer';
 import DailyPlayer from './pages/MusicPlayer/DailyPlayer';
 import SetupAccount from './pages/SetupAccount/SetupAccount';
-import SpotifyCallback from './pages/SpotifyCallback';
+import SpotifyRedirect from './pages/SpotifyRedirect';
 import FortunePage from './pages/FortunePage/FortunePage';
 import AskPage from './pages/AskPage/AskPage';
 import FortunePlayer from './pages/FortunePlayer/FortunePlayer';
@@ -21,7 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />  
         <Route path="/SetupAccount" element={<SetupAccount />} />
-        <Route path="/spotify-callback" element={<SpotifyCallback />} /> 
+        <Route path="/spotify-redirect" element={<SpotifyRedirect />} /> 
         <Route path="/home" element={<HomePage />} />
         <Route path="/mood" element={<MoodPage />} />
         <Route path="/activity" element={<ActivityPage />} />
