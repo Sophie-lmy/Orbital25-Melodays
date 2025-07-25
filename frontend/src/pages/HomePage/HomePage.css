@@ -39,8 +39,7 @@
   margin-top: auto;
 }
 
-.sidebar-links a, 
-.logout-link {
+.sidebar-links a, {
   text-decoration: underline;
   color: white;
   font-size: 20px;
