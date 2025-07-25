@@ -23,7 +23,7 @@ app.use("/daily", dailyRoutes);
 app.use("/diary", diaryRoutes);
 app.use("/songs", songRoutes);
 app.use("/fortune", fortuneRoutes);
-app.use("/api/spotify", spotifyRoutes);
+app.use("/spotify", spotifyRoutes);
 
 initDatabase();
 
