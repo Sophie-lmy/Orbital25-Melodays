@@ -19,8 +19,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/*<Route path="/" element={<LoginPage />} />  */}
-        <Route path="/" element={<SetupAccount />} />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/setupaccount" element={<SetupAccount />} />
         <Route path="/spotify-redirect" element={<SpotifyRedirect />} /> 
         <Route path="/home" element={<HomePage />} />
         <Route path="/mood" element={<MoodPage />} />
