@@ -33,7 +33,7 @@ exports.spotifyCallback = async (req, res) => {
     await userModel.updateSpotifyTokens(userId, access_token, refresh_token);
 
     res.redirect(
-      `https://melodays.vercel.app/spotify-redirect?access_token=${access_token}&expires_in=${expires_in}`
+      `https://melodays-frontend.vercel.app/spotify-redirect?access_token=${access_token}&expires_in=${expires_in}`
     );
   } catch (err) {
     console.error("Spotify Callback Error:", err.response?.data || err);
