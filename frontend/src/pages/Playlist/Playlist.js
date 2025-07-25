@@ -14,7 +14,10 @@ function Playlist() {
       },
     })
       .then(res => res.json())
-      .then(data => setUsername(data.username))
+      .then(data => {
+        console.log("Profile data:", data);  
+        setUsername(data.username);
+      })
       .catch(err => console.error('Error fetching profile:', err));
 
     fetch('https://orbital25-melodays.onrender.com/liked-songs', {
