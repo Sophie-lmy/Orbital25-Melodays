@@ -20,11 +20,11 @@ function SetupAccount({ userId }) {
 
   const handleSpotifyLogin = () => {
     const clientId = 'YOUR_SPOTIFY_CLIENT_ID';
-    const redirectUri = encodeURIComponent('http://localhost:3000/spotify-callback');
+    const redirectUri = encodeURIComponent('http://localhost:3000/spotify-redirect');
     const scopes = encodeURIComponent('user-read-email user-read-private');
     const state = userId;
 
-    window.location.href = '/api/spotify-authorize';
+    window.location.href = '/spotify/authorize';
   };
 
   return (
@@ -32,8 +32,8 @@ function SetupAccount({ userId }) {
       <form className="setup-form" onSubmit={(e) => e.preventDefault()}>
         <img src="/logopurple.jpg" alt="Logo" className="setup-logo" />
       
-        <label>Username</label>
-        <input
+        <label classname ='setup-label'>Username</label>
+        <input classname='setup-input'
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}

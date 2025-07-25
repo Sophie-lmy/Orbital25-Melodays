@@ -27,14 +27,14 @@ body {
   margin-bottom: 50px;
 }
 
-label {
+.setup-label {
   align-self: flex-start;
   color: white;
   font-size: 18px;
   margin-bottom: 10px;
 }
 
-input[type="text"] {
+.setup-input[type="text"] {
   width: 100%;
   padding: 12px;
   margin-bottom: 40px;
