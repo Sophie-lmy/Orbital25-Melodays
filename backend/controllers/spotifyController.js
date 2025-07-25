@@ -6,15 +6,13 @@ const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const SPOTIFY_REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI;
 
 exports.spotifyAuthorize = (req, res) => {
-  const userId = req.query.userId;
+  const userId = req.user.id;
   const scope =
     "user-read-private user-read-email streaming user-modify-playback-state user-read-playback-state";
-
   const authUrl = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(
     SPOTIFY_REDIRECT_URI
   )}&scope=${encodeURIComponent(scope)}&state=${userId}`;
-
-  res.redirect(authUrl);
+  res.json({ url: authUrl });
 };
 
 exports.spotifyCallback = async (req, res) => {
@@ -35,7 +33,7 @@ exports.spotifyCallback = async (req, res) => {
     await userModel.updateSpotifyTokens(userId, access_token, refresh_token);
 
     res.redirect(
-      `http://localhost:3000/spotify-redirect?access_token=${access_token}&expires_in=${expires_in}`
+      `https://melodays.vercel.app/spotify-redirect?access_token=${access_token}&expires_in=${expires_in}`
     );
   } catch (err) {
     console.error("Spotify Callback Error:", err.response?.data || err);
