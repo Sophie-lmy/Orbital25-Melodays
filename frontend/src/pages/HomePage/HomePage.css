@@ -19,7 +19,7 @@
   margin-bottom: 26px;
 }
 
-.logo {
+.home-logo {
   width: 370px;            
   height: auto;            
   margin-bottom: 8px;           
@@ -42,7 +42,7 @@
 .sidebar-links a {
   text-decoration: underline;
   color: white;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 /* right panel */

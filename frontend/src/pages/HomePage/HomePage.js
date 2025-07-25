@@ -7,12 +7,12 @@ function HomePage() {
       {/* Left Panel */}
       <div className="sidebar">
         <h2>Welcome to</h2>
-        <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
+        <img src="/logoblack.jpg" alt="Melodays Logo" className="home-logo" />
         <p className="subtitle">A personalized, emotional music discovery platform.</p>
 
         <div className="sidebar-links">
           <a href="/playlist">My Playlist</a>
-          <a href="/logout">Log out</a>
+          <a href="/">Log out</a>
         </div>
       </div>
 
