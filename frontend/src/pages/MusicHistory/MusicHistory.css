@@ -30,6 +30,20 @@
   display: flex;
 }
 
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+  align-items: center;
+}
+
+.filters label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
 
 .diary-entry {
   background: white;

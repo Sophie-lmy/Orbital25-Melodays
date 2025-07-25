@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import './SetupAccount.css';
 
@@ -7,6 +7,27 @@ function SetupAccount() {
   const userId = location.state?.userId;
 
   const [username, setUsername] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  //fetch existing username
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!userId) return;
+      try {
+        const res = await fetch(`https://orbital25-melodays.onrender.com/auth/get-profile?userId=${userId}`);
+        const data = await res.json();
+        if (res.ok && data.username) {
+          setUsername(data.username);
+        }
+      } catch (err) {
+        console.error('Failed to fetch profile:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [userId]);
 
   const handleSave = async () => {
     const res = await fetch('https://orbital25-melodays.onrender.com/auth/save-profile', {
@@ -31,8 +52,8 @@ function SetupAccount() {
       <form className="setup-form" onSubmit={(e) => e.preventDefault()}>
         <img src="/logopurple.jpg" alt="Logo" className="setup-logo" />
       
-        <label classname ='setup-label'>Username</label>
-        <input classname='setup-input'
+        <label className ='setup-label'>Username</label>
+        <input className='setup-input'
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}

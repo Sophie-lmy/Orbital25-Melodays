@@ -32,6 +32,9 @@ body {
   color: white;
   font-size: 18px;
   margin-bottom: 10px;
+  display: block;
+  text-align: left;
+  max-width: 300px;
 }
 
 .setup-input[type="text"] {

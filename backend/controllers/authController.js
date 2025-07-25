@@ -63,3 +63,23 @@ exports.saveProfile = async (req, res) => {
     res.status(500).json({ message: "Failed to update profile." });
   }
 };
+
+exports.getProfile = async (req, res) => {
+  const { userId } = req.query;
+
+  if (!userId) {
+    return res.status(400).json({ message: "Missing userId" });
+  }
+
+  try {
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ username: user.username });
+  } catch (err) {
+    console.error("Get profile error:", err);
+    res.status(500).json({ message: "Failed to fetch profile." });
+  }
+};
