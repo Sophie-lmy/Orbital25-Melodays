@@ -25,6 +25,19 @@ function buildQuery(keywords) {
   return selected.join(' ');
 }
 
+async function getValidSong(keywords, token, maxAttempts = 5) {
+  let attempt = 0;
+  while (attempt < maxAttempts) {
+    const query = buildQuery(keywords);
+    const result = await searchSongs(query, token);
+    if (result && result.id && result.name) {
+      return result;
+    }
+    attempt++;
+  }
+  return null;
+}
+
 exports.recommendByMood = async (req, res) => {
   const userId = req.user.id;
   const mood = req.body.mood;
@@ -36,10 +49,11 @@ exports.recommendByMood = async (req, res) => {
 
   try {
     const token = await userModel.getValidAccessToken(userId);
-    const query = buildQuery(keywords);
-    const result = await searchSongs(query, token);
+    const track = await getValidSong(keywords, token);
 
-    const track = result;
+    if (!track) {
+      return res.status(500).json({ error: 'Failed to get valid recommendation after retries.' });
+    }
 
     await db.query(
       `INSERT INTO diary_entries 
@@ -74,10 +88,11 @@ exports.recommendByActivity = async (req, res) => {
 
   try {
     const token = await userModel.getValidAccessToken(userId);
-    const query = buildQuery(keywords);
-    const result = await searchSongs(query, token);
+    const track = await getValidSong(keywords, token);
 
-    const track = result;
+    if (!track) {
+      return res.status(500).json({ error: 'Failed to get valid recommendation after retries.' });
+    }
 
     await db.query(
       `INSERT INTO diary_entries 
