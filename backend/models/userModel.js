@@ -29,12 +29,21 @@ exports.updateDailyRecommendation = async (userId, date, songJson) => {
 };
 
 exports.updateSpotifyTokens = async (userId, accessToken, refreshToken) => {
-  return db.query(
-    `UPDATE users 
-     SET spotify_access_token = $1, spotify_refresh_token = $2, spotify_token_updated_at = NOW()
-     WHERE id = $3`,
-    [accessToken, refreshToken, userId]
-  );
+  if (refreshToken) {
+    return db.query(
+      `UPDATE users 
+       SET spotify_access_token = $1, spotify_refresh_token = $2, spotify_token_updated_at = NOW()
+       WHERE id = $3`,
+      [accessToken, refreshToken, userId]
+    );
+  } else {
+    return db.query(
+      `UPDATE users 
+       SET spotify_access_token = $1, spotify_token_updated_at = NOW()
+       WHERE id = $2`,
+      [accessToken, userId]
+    );
+  }
 };
 
 exports.updateSpotifyAccessToken = async (userId, accessToken) => {
@@ -69,10 +78,15 @@ exports.getValidAccessToken = async (userId) => {
       params.append("client_secret", SPOTIFY_CLIENT_SECRET);
 
       const response = await axios.post("https://accounts.spotify.com/api/token", params);
-      const newToken = response.data.access_token;
+      const data = response.data;
 
-      await exports.updateSpotifyAccessToken(userId, newToken);
-      return newToken;
+      if (!data.access_token) {
+        console.error('Spotify token refresh failed:', data);
+        throw new Error("Spotify access token is invalid and cannot be refreshed.");
+      }
+
+      await exports.updateSpotifyAccessToken(userId, data.access_token);
+      return data.access_token;
     }
     throw new Error("Spotify access token is invalid and cannot be refreshed.");
   }

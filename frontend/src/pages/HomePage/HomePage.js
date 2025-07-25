@@ -1,7 +1,18 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
 
 function HomePage() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+
+    navigate('/');
+  };
+
+
   return (
     <div className="homepage-wrapper">
       {/* Left Panel */}
@@ -12,7 +23,7 @@ function HomePage() {
 
         <div className="sidebar-links">
           <a href="/playlist">My Playlist</a>
-          <a href="/">Log out</a>
+          <button onClick={handleLogout} className="logout-link">Log out</button>
         </div>
       </div>
 

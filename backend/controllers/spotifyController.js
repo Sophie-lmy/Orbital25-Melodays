@@ -18,6 +18,9 @@ exports.spotifyAuthorize = (req, res) => {
 exports.spotifyCallback = async (req, res) => {
   const code = req.query.code;
   const userId = req.query.state;
+  if (!userId || userId === 'undefined') {
+    return res.status(400).json({ message: 'Missing or invalid state (userId)' });
+  }
 
   try {
     const params = new URLSearchParams();
