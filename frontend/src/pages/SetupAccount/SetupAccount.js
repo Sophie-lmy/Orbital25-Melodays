@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import './SetupAccount.css';
 
-function SetupAccount({ userId }) {
+function SetupAccount() {
+  const location = useLocation();
+  const userId = location.state?.userId;
+
   const [username, setUsername] = useState('');
 
   const handleSave = async () => {
-    const res = await fetch('/api/save-profile', {
+    const res = await fetch('https://orbital25-melodays.onrender.com/auth/save-profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId, username }),
@@ -19,12 +23,7 @@ function SetupAccount({ userId }) {
   };
 
   const handleSpotifyLogin = () => {
-    const clientId = 'YOUR_SPOTIFY_CLIENT_ID';
-    const redirectUri = encodeURIComponent('http://localhost:3000/spotify-redirect');
-    const scopes = encodeURIComponent('user-read-email user-read-private');
-    const state = userId;
-
-    window.location.href = '/spotify/authorize';
+    window.location.href = `https://orbital25-melodays.onrender.com/api/spotify/authorize?userId=${userId}`;
   };
 
   return (

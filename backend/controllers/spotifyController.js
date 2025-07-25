@@ -6,18 +6,20 @@ const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const SPOTIFY_REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI;
 
 exports.spotifyAuthorize = (req, res) => {
+  const userId = req.query.userId;
   const scope =
     "user-read-private user-read-email streaming user-modify-playback-state user-read-playback-state";
+
   const authUrl = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(
     SPOTIFY_REDIRECT_URI
-  )}&scope=${encodeURIComponent(scope)}`;
+  )}&scope=${encodeURIComponent(scope)}&state=${userId}`;
 
   res.redirect(authUrl);
 };
 
 exports.spotifyCallback = async (req, res) => {
   const code = req.query.code;
-  const userId = req.user?.id;
+  const userId = req.query.state;
 
   try {
     const params = new URLSearchParams();

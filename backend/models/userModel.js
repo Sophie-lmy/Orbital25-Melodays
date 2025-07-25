@@ -77,3 +77,7 @@ exports.getValidAccessToken = async (userId) => {
     throw new Error("Spotify access token is invalid and cannot be refreshed.");
   }
 };
+
+exports.updateUsername = async (userId, username) => {
+  await db.query("UPDATE users SET username = $1 WHERE id = $2", [username, userId]);
+};
