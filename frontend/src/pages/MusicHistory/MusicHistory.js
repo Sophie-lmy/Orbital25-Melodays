@@ -89,7 +89,6 @@ const MusicHistory = () => {
             <div className="tagline">Music Journal</div>
         </div>
         
-        {/* filter controls */}
         <div className="filters">
           <label>
             Type:
