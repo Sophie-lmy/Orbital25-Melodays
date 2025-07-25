@@ -11,7 +11,7 @@ exports.spotifyAuthorize = (req, res) => {
     "user-read-private user-read-email streaming user-modify-playback-state user-read-playback-state";
   const authUrl = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(
     SPOTIFY_REDIRECT_URI
-  )}&scope=${encodeURIComponent(scope)}&state=${userId}`;
+  )}&scope=${encodeURIComponent(scope)}&state=${userId}&show_dialog=true`;
   res.json({ url: authUrl });
 };
 
