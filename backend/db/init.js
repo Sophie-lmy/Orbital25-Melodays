@@ -11,7 +11,6 @@ async function initDatabase() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    console.log('Users table created or already exists.');
 
     await pool.query(`
       ALTER TABLE users
@@ -21,7 +20,6 @@ async function initDatabase() {
       ADD COLUMN IF NOT EXISTS spotify_refresh_token TEXT,
       ADD COLUMN IF NOT EXISTS spotify_token_updated_at TIMESTAMP;
     `);
-    console.log('Users table columns ensured.');
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS liked_songs (
@@ -35,7 +33,6 @@ async function initDatabase() {
         liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    console.log('Liked_songs table created or already exists.');
 
     await pool.query(`
       DO $$
@@ -50,13 +47,12 @@ async function initDatabase() {
       END
       $$;
     `);
-    console.log('Unique index on (user_id, spotify_track_id) ensured.');
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS diary_entries (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        type VARCHAR(50) NOT NULL CHECK (type IN ('recommend', 'like', 'fortune')),
+        type VARCHAR(50) NOT NULL,
         question TEXT,
         spotify_track_id VARCHAR(100),
         track_name TEXT,
@@ -68,8 +64,27 @@ async function initDatabase() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    console.log('Diary_entries table created or already exists.');
-    
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF EXISTS (
+          SELECT 1 FROM pg_constraint
+          WHERE conname = 'diary_entries_type_check'
+        ) THEN
+          ALTER TABLE diary_entries DROP CONSTRAINT diary_entries_type_check;
+        END IF;
+      END
+      $$;
+    `);
+
+    await pool.query(`
+      ALTER TABLE diary_entries
+      ADD CONSTRAINT diary_entries_type_check
+      CHECK (type IN ('recommend', 'like', 'fortune', 'mood', 'activity', 'daily'));
+    `);
+
+    console.log('Database initialized.');
   } catch (err) {
     console.error('Error initializing database:', err);
   }

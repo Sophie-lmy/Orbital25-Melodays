@@ -25,6 +25,21 @@ function buildQuery(keywords) {
   return selected.join(' ');
 }
 
+async function getValidSong(keywords, token, maxAttempts = 5) {
+  if (!token) return null;
+
+  let attempt = 0;
+  while (attempt < maxAttempts) {
+    const query = buildQuery(keywords);
+    const result = await searchSongs(query, token);
+    if (result && result.id && result.title) {
+      return result;
+    }
+    attempt++;
+  }
+  return null;
+}
+
 exports.recommendByMood = async (req, res) => {
   const userId = req.user.id;
   const mood = req.body.mood;
@@ -36,16 +51,31 @@ exports.recommendByMood = async (req, res) => {
 
   try {
     const token = await userModel.getValidAccessToken(userId);
-    const query = buildQuery(keywords);
-    const result = await searchSongs(query, token);
+    if (!token) {
+      return res.status(401).json({ error: 'Spotify not linked or token expired.' });
+    }
+
+    const track = await getValidSong(keywords, token);
+    if (!track) {
+      return res.status(500).json({ error: 'Failed to get valid recommendation after retries.' });
+    }
 
     await db.query(
-      `INSERT INTO diary_entries (user_id, type, recommend_context)
-       VALUES ($1, 'recommend', $2)`,
-      [userId, { mood }]
+      `INSERT INTO diary_entries 
+        (user_id, type, spotify_track_id, track_name, artist_name, album_name, album_image_url, recommend_context)
+       VALUES ($1, 'mood', $2, $3, $4, $5, $6, $7)`,
+      [
+        userId,
+        track.id,
+        track.title,
+        track.artist,
+        track.album,
+        track.cover,
+        { mood }
+      ]
     );
 
-    res.json(result);
+    res.json(track);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch mood-based recommendation.' });
@@ -63,16 +93,31 @@ exports.recommendByActivity = async (req, res) => {
 
   try {
     const token = await userModel.getValidAccessToken(userId);
-    const query = buildQuery(keywords);
-    const result = await searchSongs(query, token);
+    if (!token) {
+      return res.status(401).json({ error: 'Spotify not linked or token expired.' });
+    }
+
+    const track = await getValidSong(keywords, token);
+    if (!track) {
+      return res.status(500).json({ error: 'Failed to get valid recommendation after retries.' });
+    }
 
     await db.query(
-      `INSERT INTO diary_entries (user_id, type, recommend_context)
-       VALUES ($1, 'recommend', $2)`,
-      [userId, { activity }]
+      `INSERT INTO diary_entries 
+        (user_id, type, spotify_track_id, track_name, artist_name, album_name, album_image_url, recommend_context)
+       VALUES ($1, 'activity', $2, $3, $4, $5, $6, $7)`,
+      [
+        userId,
+        track.id,
+        track.title,
+        track.artist,
+        track.album,
+        track.cover,
+        { activity }
+      ]
     );
 
-    res.json(result);
+    res.json(track);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch activity-based recommendation.' });
