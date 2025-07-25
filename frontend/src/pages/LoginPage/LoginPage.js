@@ -29,6 +29,7 @@ function LoginPage() {
       console.log(`${endpoint} response:`, data);
 
       if (response.ok) {
+        localStorage.setItem('token', data.token); //save token
         alert(`${isLogin ? 'Login' : 'Sign up'} successful!`);
         navigate('/SetupAccount');
       } else {

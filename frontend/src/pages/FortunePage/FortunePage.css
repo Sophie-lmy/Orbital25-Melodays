@@ -26,7 +26,6 @@
 }
 
 .fortune-title {
-  margin-top: 2rem;
   font-size: 2rem;
   margin-left: 60px;
   margin-top: 80px;
@@ -46,7 +45,7 @@
 .tarot-card {
   cursor: pointer;
   transition: transform 0.2s;
-  width: 138px;
+  width: 125px;
 }
 
 .tarot-card:hover {

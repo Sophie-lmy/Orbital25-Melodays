@@ -14,13 +14,14 @@ import AskPage from './pages/AskPage/AskPage';
 import FortunePlayer from './pages/FortunePlayer/FortunePlayer';
 import MusicHistory from './pages/MusicHistory/MusicHistory';
 import DiaryDetails from './pages/DiaryDetails/DiaryDetails';
+import Playlist from './pages/Playlist/Playlist';
 
 function App() {
   return (
     <Router>
       <Routes>
         {/*<Route path="/" element={<LoginPage />} />  */}
-        <Route path="/" element={<SetupAccount />} />
+        <Route path="/SetupAccount" element={<SetupAccount />} />
         <Route path="/spotify-redirect" element={<SpotifyRedirect />} /> 
         <Route path="/home" element={<HomePage />} />
         <Route path="/mood" element={<MoodPage />} />
@@ -33,6 +34,7 @@ function App() {
         <Route path="/fortune-player" element={<FortunePlayer />} />
         <Route path="/music-history" element={<MusicHistory />} />
         <Route path="/diary" element={<DiaryDetails />} /> 
+        <Route path="/playlist" element={<Playlist />} /> 
 
       </Routes>
     </Router>

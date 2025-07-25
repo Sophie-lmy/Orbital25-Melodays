@@ -6,6 +6,7 @@ const MusicHistory = () => {
   const [entries, setEntries] = useState([]);
   const [typeFilter, setTypeFilter] = useState('');
   const [monthFilter, setMonthFilter] = useState('');
+  const [likedTracks, setLikedTracks] = useState([]);
   const navigate = useNavigate();
 
   const fetchEntries = () => {
@@ -13,31 +14,64 @@ const MusicHistory = () => {
     if (typeFilter) params.append('type', typeFilter);
     if (monthFilter) params.append('month', monthFilter);
 
-    fetch(`https://orbital25-melodays.onrender.com/diary?${params.toString()}`)
+    const token = localStorage.getItem('token');
+
+    fetch(`https://orbital25-melodays.onrender.com/diary?${params.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(res => res.json())
-      .then(data => setEntries(data))
+      .then(data => {
+      console.log("Fetched diary entries:", data);
+      setEntries(data);
+    })
       .catch(err => console.error('Diary fetch error:', err));
   };
 
-  const toggleLike = async (id, currentLiked) => {
+  useEffect(() => {
+  fetchEntries();
+
+  //fetch liked song IDs 
+  fetch('/song/liked')
+    .then(res => res.json())
+    .then(data => {
+      const likedIds = data.map(song => song.spotify_track_id);
+      setLikedTracks(likedIds);
+    })
+    .catch(err => console.error('Failed to load liked songs:', err));
+}, [typeFilter, monthFilter]);
+
+  const toggleLike = async (spotifyId) => {
+  const isLiked = likedTracks.includes(spotifyId);
+
+  const url = isLiked
+    ? `/song/unlike/${spotifyId}`
+    : `/song/like`;
+
+  const method = isLiked ? 'DELETE' : 'POST';
+  const body = isLiked
+    ? null
+    : JSON.stringify({ spotify_track_id: spotifyId });
+
   try {
-    const res = await fetch(`/diary/${id}`, {
-      method: 'PATCH',
+    const res = await fetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ liked: !currentLiked }),
+      body,
     });
 
     if (res.ok) {
-      setEntries(prev =>
-        prev.map(entry =>
-          entry.id === id ? { ...entry, liked: !currentLiked } : entry
-        )
+      setLikedTracks(prev =>
+        isLiked
+          ? prev.filter(id => id !== spotifyId)
+          : [...prev, spotifyId]
       );
     } else {
-      console.error('Failed to update like status');
+      console.error('Failed to toggle like');
     }
   } catch (err) {
-    console.error('Like toggle error:', err);
+    console.error('Error toggling like:', err);
   }
 };
 
@@ -91,10 +125,10 @@ const MusicHistory = () => {
                 
                 <button
                   className="like-button"
-                  onClick={() => toggleLike(entry.id, entry.liked)}
+                  onClick={() => toggleLike(entry.spotify_track_id)}
                 >
                   <img
-                    src={entry.liked ? '/redheart.png' : '/emptyheart.png'}
+                    src={likedTracks.includes(entry.spotify_track_id) ? '/redheart.png' : '/emptyheart.png'}
                     alt="Like"
                     className="heart-icon"
                   />
