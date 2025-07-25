@@ -22,9 +22,26 @@ function SetupAccount() {
     }
   };
 
-  const handleSpotifyLogin = () => {
-    window.location.href = `https://orbital25-melodays.onrender.com/spotify/authorize?userId=${userId}`;
-  };
+  const handleSpotifyLogin = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Please log in first.');
+    return;
+  }
+  try {
+    const res = await fetch('https://orbital25-melodays.onrender.com/spotify/authorize', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+    window.location.href = data.url;
+  } catch (err) {
+    alert('Failed to connect to Spotify');
+    console.error(err);
+  }
+};
 
   return (
     <div className="setup-container">

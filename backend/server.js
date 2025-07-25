@@ -9,7 +9,7 @@ const dailyRoutes = require("./routes/daily");
 const diaryRoutes = require("./routes/diary");
 const songRoutes = require("./routes/songs");
 const fortuneRoutes = require("./routes/fortune");
-const spotifyRoutes = require("./routes/spotify"); // ✅
+const spotifyRoutes = require("./routes/spotify");
 
 const app = express();
 const port = process.env.PORT || 3000;

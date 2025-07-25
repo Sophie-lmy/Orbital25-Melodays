@@ -11,7 +11,7 @@ exports.register = async (req, res) => {
     }
     const hashed = await hashPassword(password);
     const newUser = await userModel.createUser(username, email, hashed);
-    const accessToken = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
     res.status(201).json({
       message: "User registered successfully.",
@@ -20,7 +20,7 @@ exports.register = async (req, res) => {
         username: newUser.username,
         email: newUser.email
       },
-      accessToken
+      token
     });
   } catch (err) {
     console.error("Registration error:", err);
@@ -36,16 +36,16 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
     res.status(200).json({
       message: "Login successful.",
       user: {
         id: user.id,
         username: user.username,
-        email: user.email,
+        email: user.email
       },
-      accessToken
+      token
     });
   } catch (err) {
     console.error("Login error:", err);
@@ -54,7 +54,8 @@ exports.login = async (req, res) => {
 };
 
 exports.saveProfile = async (req, res) => {
-  const { userId, username } = req.body;
+  const userId = req.user.id;
+  const { username } = req.body;
   try {
     await userModel.updateUsername(userId, username);
     res.status(200).json({ message: "Profile updated successfully." });
