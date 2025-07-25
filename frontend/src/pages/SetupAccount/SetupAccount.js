@@ -23,7 +23,7 @@ function SetupAccount() {
   };
 
   const handleSpotifyLogin = () => {
-    window.location.href = `https://orbital25-melodays.onrender.com/api/spotify/authorize?userId=${userId}`;
+    window.location.href = `https://orbital25-melodays.onrender.com/spotify/authorize?userId=${userId}`;
   };
 
   return (
