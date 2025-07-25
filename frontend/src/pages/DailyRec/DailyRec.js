@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import './DailyRec.css';
 
 function MusicPlayer() {
-  const { emotion } = useParams();
   const [song, setSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
@@ -11,15 +9,19 @@ function MusicPlayer() {
   useEffect(() => {
     const fetchSong = async () => {
       const token = localStorage.getItem('token');
-      if (!token) return;
+      if (!token) {
+        console.warn('No token found');
+        return;
+      }
 
       try {
-        const res = await fetch(`https://orbital25-melodays.onrender.com/daily?emotion=${emotion}`, {
+        const res = await fetch(`https://orbital25-melodays.onrender.com/daily`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
         const data = await res.json();
+        console.log('Daily song:', data);
         setSong(data);
       } catch (err) {
         console.error('Error loading song:', err);
@@ -28,7 +30,7 @@ function MusicPlayer() {
     };
 
     fetchSong();
-  }, [emotion]);
+  }, []);
 
   const togglePlay = () => {
     if (!audioRef.current) return;
@@ -42,8 +44,10 @@ function MusicPlayer() {
 
   const getNextSong = async () => {
     const token = localStorage.getItem('token');
+    if (!token) return;
+
     try {
-      const res = await fetch(`https://orbital25-melodays.onrender.com/daily?emotion=${emotion}&next=true`, {
+      const res = await fetch(`https://orbital25-melodays.onrender.com/daily?next=true`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -72,6 +76,7 @@ function MusicPlayer() {
       <div className="cd-wrapper">
         <img src="/player.gif" alt="cd" className="cd" />
         <p className="song-name">{song.track_name || 'No Song Title'}</p>
+        <p className="artist-name">{song.artist_name || 'Unknown Artist'}</p>
       </div>
 
       <audio ref={audioRef} src={song.preview_url} />
