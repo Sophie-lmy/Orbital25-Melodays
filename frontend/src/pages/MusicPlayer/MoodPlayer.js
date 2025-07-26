@@ -26,6 +26,38 @@ function MoodPlayer() {
   };
 
 
+  const handleLikeToggle = async () => {
+    const newLikedState = !liked;
+    setLiked(newLikedState);
+
+    if (newLikedState) {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please log in to like songs.");
+        return;
+      }
+
+      try {
+        const res = await fetch("https://orbital25-melodays.onrender.com/songs/liked", {
+          method: "POST", 
+          headers: {
+            "Content-Type": "application/json", 
+            Authorization: `Bearer ${token}` 
+          },
+          body: JSON.stringify(song) 
+        });
+
+        if (!res.ok) throw new Error("Failed to like song"); 
+
+        console.log("Song liked successfully"); 
+      } catch (err) {
+        console.error("Error liking song:", err); 
+        alert("Failed to like song."); 
+        setLiked(false); 
+      }
+    }
+  };
+
   if (!song) return <div className="music-player">Loading...</div>;
 
   return (

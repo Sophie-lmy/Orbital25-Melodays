@@ -90,7 +90,7 @@
   font-size: 15px;
 }
 
-button {
+.details-button {
   margin-top: 0.75rem;
   background-color: #6600cc;
   color: #fff;

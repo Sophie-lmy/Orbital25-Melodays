@@ -57,7 +57,7 @@ const MusicHistory = () => {
     fetchLikedSongs();
   }, [typeFilter, monthFilter]);
 
-  
+
   const toggleLike = async (spotifyId) => {
     const isLiked = likedTracks.includes(spotifyId);
     const url = isLiked
@@ -129,7 +129,7 @@ const MusicHistory = () => {
                 <p>{new Date(entry.created_at).toLocaleString()}</p>
                 <p><strong>🏷️ Type:</strong> {entry.type}</p>
                 <p><strong>🎵 Song:</strong> {entry.track_name} by {entry.artist_name}</p>
-                
+                <p><strong>💬 Comment:</strong> {entry.comment || 'No comment yet.'}</p>
                 <button
                   className="like-button"
                   onClick={() => toggleLike(entry.spotify_track_id)}
@@ -141,8 +141,7 @@ const MusicHistory = () => {
                   />
                 </button>
 
-                <p><strong>💬 Comment:</strong> {entry.comment || 'No comment yet.'}</p>
-                <button onClick={() => navigate(`/diary/${entry.id}`)}>View Details</button>
+                <button className="details-button" onClick={() => navigate(`/diary/${entry.id}`)}>View Details</button>
             </div>
             ))
         )}
