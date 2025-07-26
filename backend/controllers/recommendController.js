@@ -113,13 +113,13 @@ exports.recommendByMood = async (req, res) => {
         track.artist,
         track.album,
         track.cover,
-        { mood }
+        { {mood} }
       ]
     );
 
     res.json(track);
   } catch (err) {
-    console.error(err);
+    console.error("HARD CODE FAIL", err); 
     res.status(500).json({ error: 'Temporary recommendation fallback failed.' });
   }
 };
