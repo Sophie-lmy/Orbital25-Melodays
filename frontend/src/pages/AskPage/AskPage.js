@@ -21,17 +21,24 @@ const AskPage = () => {
   if (!question.trim()) return;
 
   try {
+    const token = localStorage.getItem('token'); 
+
     const res = await fetch('https://orbital25-melodays.onrender.com/fortune', {
-      method: 'POST',
-      headers: {
+        method: 'POST',
+        headers: {
         'Content-Type': 'application/json',
-      },
-      credentials: 'include', // only if using cookies/session auth
-      body: JSON.stringify({
-        type: selectedCard,   
+        'Authorization': `Bearer ${token}` 
+        },
+        body: JSON.stringify({
+        type: selectedCard,
         question: question,
-      }),
+        }),
     });
+
+  // handle response...
+} catch (err) {
+  console.error('Failed to submit fortune request:', err);
+}
 
     if (!res.ok) throw new Error('Failed to fetch fortune music.');
 

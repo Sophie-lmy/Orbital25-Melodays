@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './DiaryDetails.css';
 
-const DiaryDetail = () => {
+const DiaryDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [entry, setEntry] = useState(null);
@@ -97,4 +97,4 @@ const DiaryDetail = () => {
   );
 };
 
-export default DiaryDetail;
+export default DiaryDetails;
