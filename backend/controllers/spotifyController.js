@@ -18,6 +18,7 @@ exports.spotifyAuthorize = (req, res) => {
 exports.spotifyCallback = async (req, res) => {
   const code = req.query.code;
   const userId = req.query.state;
+
   if (!userId || userId === 'undefined') {
     return res.status(400).json({ message: 'Missing or invalid state (userId)' });
   }
@@ -26,21 +27,27 @@ exports.spotifyCallback = async (req, res) => {
     const params = new URLSearchParams();
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", SPOTIFY_REDIRECT_URI);
-    params.append("client_id", SPOTIFY_CLIENT_ID);
-    params.append("client_secret", SPOTIFY_CLIENT_SECRET);
+    params.append("redirect_uri", process.env.SPOTIFY_REDIRECT_URI);
+    params.append("client_id", process.env.SPOTIFY_CLIENT_ID);
+    params.append("client_secret", process.env.SPOTIFY_CLIENT_SECRET);
 
     const tokenRes = await axios.post("https://accounts.spotify.com/api/token", params);
     const { access_token, refresh_token, expires_in } = tokenRes.data;
+
+    // for testing
+    console.log("   Spotify token response for user:", userId);
+    console.log("   access_token:", access_token);
+    console.log("   refresh_token:", refresh_token ?? '[null]');
+    console.log("   expires_in:", expires_in);
 
     const existingUser = await userModel.findById(userId);
 
     if (refresh_token) {
       await userModel.updateSpotifyTokens(userId, access_token, refresh_token);
-      console.log("Updated access_token and refresh_token for user", userId);
+      console.log("Stored new access_token + refresh_token for user", userId);
     } else {
       await userModel.updateSpotifyAccessToken(userId, access_token);
-      console.warn("No refresh_token received, only access_token updated for user", userId);
+      console.warn("No refresh_token received, only access_token stored for user", userId);
     }
 
     res.redirect(
