@@ -66,6 +66,7 @@ exports.saveProfile = async (req, res) => {
 };
 
 exports.getProfile = async (req, res) => {
+  console.log("Received user from middleware:", req.user);
   const userId = req.user.id;
 
   try {
