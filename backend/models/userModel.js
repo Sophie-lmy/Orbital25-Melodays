@@ -27,24 +27,18 @@ exports.updateUsername = async (userId, username) => {
 };
 
 exports.updateSpotifyTokens = async (userId, accessToken, refreshToken) => {
-  if (refreshToken) {
-    return db.query(
-      `UPDATE users 
-       SET spotify_access_token = $1,
-           spotify_refresh_token = $2,
-           spotify_token_updated_at = NOW()
-       WHERE id = $3`,
-      [accessToken, refreshToken, userId]
-    );
-  } else {
-    return db.query(
-      `UPDATE users 
-       SET spotify_access_token = $1,
-           spotify_token_updated_at = NOW()
-       WHERE id = $2`,
-      [accessToken, userId]
-    );
+  if (!refreshToken) {
+    throw new Error("Tried to update with empty refresh_token");
   }
+
+  return db.query(
+    `UPDATE users 
+     SET spotify_access_token = $1,
+         spotify_refresh_token = $2,
+         spotify_token_updated_at = NOW()
+     WHERE id = $3`,
+    [accessToken, refreshToken, userId]
+  );
 };
 
 exports.updateSpotifyAccessToken = async (userId, accessToken) => {
@@ -62,6 +56,7 @@ exports.getValidAccessToken = async (userId) => {
     `SELECT spotify_access_token, spotify_refresh_token FROM users WHERE id = $1`,
     [userId]
   );
+
   const user = result.rows[0];
   if (!user) throw new Error("User not found.");
   if (!user.spotify_access_token) throw new Error("No access token found.");
@@ -83,13 +78,13 @@ exports.getValidAccessToken = async (userId) => {
       const data = response.data;
 
       if (!data.access_token) {
-        console.error('Spotify token refresh failed:', data);
         throw new Error("Spotify access token is invalid and cannot be refreshed.");
       }
 
       await exports.updateSpotifyAccessToken(userId, data.access_token);
       return data.access_token;
     }
+
     throw new Error("Spotify access token is invalid and cannot be refreshed.");
   }
 };

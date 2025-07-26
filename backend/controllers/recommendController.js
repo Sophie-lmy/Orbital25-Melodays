@@ -27,8 +27,8 @@ function buildQuery(keywords) {
 
 async function getValidSong(keywords, token, maxAttempts = 5) {
   if (!token) return null;
-
   let attempt = 0;
+
   while (attempt < maxAttempts) {
     const query = buildQuery(keywords);
     const result = await searchSongs(query, token);
@@ -37,10 +37,11 @@ async function getValidSong(keywords, token, maxAttempts = 5) {
     }
     attempt++;
   }
+
   return null;
 }
 
-/*exports.recommendByMood = async (req, res) => {
+exports.recommendByMood = async (req, res) => {
   const userId = req.user.id;
   const mood = req.body.mood;
   const keywords = moodKeywords[mood];
@@ -77,53 +78,10 @@ async function getValidSong(keywords, token, maxAttempts = 5) {
 
     res.json(track);
   } catch (err) {
-    console.error(err);
+    console.error("recommendByMood error:", err);
     res.status(500).json({ error: 'Failed to fetch mood-based recommendation.' });
   }
-}; */
-
-
-exports.recommendByMood = async (req, res) => {
-  const userId = req.user.id;
-  const mood = req.body.mood;
-
-  if (!mood || !moodKeywords[mood]) {
-    return res.status(400).json({ error: 'Invalid or missing mood.' });
-  }
-
-  try {
-    // ⛔ Skip Spotify logic
-    const track = {
-      id: 'hardcoded123',
-      title: 'Imagine',
-      artist: 'John Lennon',
-      album: 'Imagine',
-      cover: 'https://i.scdn.co/image/ab67616d0000b273d4f5f2d1a4b244b5a9ff6b35',
-      preview_url: 'https://p.scdn.co/mp3-preview/3d1f602cd740e8488b0110ce37017fc0cf994f3d?cid=774b29d4f13844c495f206cafdad9c86'
-    };
-
-    await db.query(
-      `INSERT INTO diary_entries 
-        (user_id, type, spotify_track_id, track_name, artist_name, album_name, album_image_url, recommend_context)
-       VALUES ($1, 'mood', $2, $3, $4, $5, $6, $7)`,
-      [
-        userId,
-        track.id,
-        track.title,
-        track.artist,
-        track.album,
-        track.cover,
-        { {mood} }
-      ]
-    );
-
-    res.json(track);
-  } catch (err) {
-    console.error("HARD CODE FAIL", err); 
-    res.status(500).json({ error: 'Temporary recommendation fallback failed.' });
-  }
 };
-
 
 exports.recommendByActivity = async (req, res) => {
   const userId = req.user.id;
@@ -162,7 +120,7 @@ exports.recommendByActivity = async (req, res) => {
 
     res.json(track);
   } catch (err) {
-    console.error(err);
+    console.error("recommendByActivity error:", err);
     res.status(500).json({ error: 'Failed to fetch activity-based recommendation.' });
   }
 };

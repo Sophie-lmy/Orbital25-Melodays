@@ -18,7 +18,8 @@ exports.register = async (req, res) => {
       user: {
         id: newUser.id,
         username: newUser.username,
-        email: newUser.email
+        email: newUser.email,
+        spotifyConnected: !!newUser.spotify_access_token
       },
       token
     });
@@ -43,7 +44,8 @@ exports.login = async (req, res) => {
       user: {
         id: user.id,
         username: user.username,
-        email: user.email
+        email: user.email,
+        spotifyConnected: !!user.spotify_access_token
       },
       token
     });
@@ -66,16 +68,17 @@ exports.saveProfile = async (req, res) => {
 };
 
 exports.getProfile = async (req, res) => {
-  console.log("Received user from middleware:", req.user);
   const userId = req.user.id;
-
   try {
     const user = await userModel.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json({ username: user.username });
+    res.json({
+      username: user.username,
+      spotifyConnected: !!user.spotify_access_token
+    });
   } catch (err) {
     console.error("Get profile error:", err);
     res.status(500).json({ message: "Failed to fetch profile." });
