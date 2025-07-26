@@ -31,7 +31,6 @@ function LoginPage() {
         localStorage.setItem('user', JSON.stringify(data.user));
         alert(`${isLogin ? 'Login' : 'Sign up'} successful!`);
 
-        // 根据是否已绑定 Spotify 跳转不同页面
         const user = data.user;
         navigate(user.spotifyConnected ? '/home' : '/setupaccount');
       } else {

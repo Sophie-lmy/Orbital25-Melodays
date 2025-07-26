@@ -19,7 +19,7 @@ exports.register = async (req, res) => {
         id: newUser.id,
         username: newUser.username,
         email: newUser.email,
-        spotifyConnected: !!newUser.spotify_access_token
+        spotifyConnected: !!newUser.spotify_refresh_token
       },
       token
     });
@@ -45,7 +45,7 @@ exports.login = async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        spotifyConnected: !!user.spotify_access_token
+        spotifyConnected: !!user.spotify_refresh_token
       },
       token
     });
@@ -77,7 +77,7 @@ exports.getProfile = async (req, res) => {
 
     res.json({
       username: user.username,
-      spotifyConnected: !!user.spotify_access_token
+      spotifyConnected: !!user.spotify_refresh_token
     });
   } catch (err) {
     console.error("Get profile error:", err);
