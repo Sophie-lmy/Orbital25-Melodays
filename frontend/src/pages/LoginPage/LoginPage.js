@@ -30,7 +30,10 @@ function LoginPage() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         alert(`${isLogin ? 'Login' : 'Sign up'} successful!`);
-        window.location.href = '/setupaccount';  // 强制刷新页面，确保新 token 生效
+
+        // 根据是否已绑定 Spotify 跳转不同页面
+        const user = data.user;
+        navigate(user.spotifyConnected ? '/home' : '/setupaccount');
       } else {
         alert(data.message || `${isLogin ? 'Login' : 'Sign up'} failed.`);
       }

@@ -34,9 +34,14 @@ exports.spotifyCallback = async (req, res) => {
     const { access_token, refresh_token, expires_in } = tokenRes.data;
 
     const existingUser = await userModel.findById(userId);
-    const finalRefreshToken = refresh_token || existingUser.spotify_refresh_token;
 
-    await userModel.updateSpotifyTokens(userId, access_token, finalRefreshToken);
+    if (refresh_token) {
+      await userModel.updateSpotifyTokens(userId, access_token, refresh_token);
+      console.log("Updated access_token and refresh_token for user", userId);
+    } else {
+      await userModel.updateSpotifyAccessToken(userId, access_token);
+      console.warn("No refresh_token received, only access_token updated for user", userId);
+    }
 
     res.redirect(
       `https://melodays-frontend.vercel.app/spotify-redirect?access_token=${access_token}&expires_in=${expires_in}`
@@ -44,32 +49,5 @@ exports.spotifyCallback = async (req, res) => {
   } catch (err) {
     console.error("Spotify Callback Error:", err.response?.data || err);
     res.status(500).json({ message: "Spotify authentication failed." });
-  }
-};
-
-exports.refreshToken = async (req, res) => {
-  const user = await userModel.findById(req.user.id);
-  const refresh_token = user.spotify_refresh_token;
-
-  if (!refresh_token) {
-    return res.status(400).json({ message: "No refresh token found." });
-  }
-
-  try {
-    const params = new URLSearchParams();
-    params.append("grant_type", "refresh_token");
-    params.append("refresh_token", refresh_token);
-    params.append("client_id", SPOTIFY_CLIENT_ID);
-    params.append("client_secret", SPOTIFY_CLIENT_SECRET);
-
-    const response = await axios.post("https://accounts.spotify.com/api/token", params);
-    const access_token = response.data.access_token;
-
-    await userModel.updateSpotifyAccessToken(user.id, access_token);
-
-    res.json({ access_token });
-  } catch (err) {
-    console.error("Refresh token error:", err.response?.data || err);
-    res.status(500).json({ message: "Failed to refresh token" });
   }
 };
