@@ -3,59 +3,54 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './AskPage.css';
 
 const AskPage = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const selectedCard = location.state?.card || 'love'; 
+    const location = useLocation();
+    const navigate = useNavigate();
+    const selectedCard = location.state?.card || 'love'; 
 
-  const [question, setQuestion] = useState('');
-  
+    const [question, setQuestion] = useState('');
 
-  const cardImages = {
+    const cardImages = {
     love: '/lovecard.jpg',
     career: '/careercard.jpg',
     choice: '/choicecard.jpg',
     'self-discovery': '/selfcard.jpg',
-  };
+    };
 
-  const handleSubmit = async () => {
-  if (!question.trim()) return;
+    const handleSubmit = async () => {
+        if (!question.trim()) return;
 
-  try {
-    const token = localStorage.getItem('token'); 
+        try {
+            const token = localStorage.getItem('token'); 
 
-    const res = await fetch('https://orbital25-melodays.onrender.com/fortune', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
-        },
-        body: JSON.stringify({
-        type: selectedCard,
-        question: question,
-        }),
-    });
+            const res = await fetch('https://orbital25-melodays.onrender.com/fortune', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            },
+            body: JSON.stringify({
+                type: selectedCard,
+                question: question,
+            }),
+            });
 
-  // handle response...
-} catch (err) {
-  console.error('Failed to submit fortune request:', err);
-}
+            if (!res.ok) throw new Error('Failed to fetch fortune music.');
 
-    if (!res.ok) throw new Error('Failed to fetch fortune music.');
+            const data = await res.json();
 
-    const data = await res.json();
-
-    navigate('/fortune-player', {
-      state: {
-        card: selectedCard,
-        question,
-        song: data, 
-      },
-    });
-  } catch (err) {
-    console.error(err);
-    alert('Something went wrong. Please try again.');
-  }
-};
+            navigate('/fortune-player', {
+            state: {
+                card: selectedCard,
+                question,
+                song: data, 
+            },
+            });
+            
+        } catch (err) {
+            console.error('Failed to submit fortune request:', err);
+            alert('Something went wrong. Please try again.');
+        }
+    };
 
 
   return (
