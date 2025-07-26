@@ -20,7 +20,7 @@ function Playlist() {
       })
       .catch(err => console.error('Error fetching profile:', err));
 
-    fetch('https://orbital25-melodays.onrender.com/liked-songs', {
+    fetch('https://orbital25-melodays.onrender.com/liked', {
       headers: {
         Authorization: `Bearer ${token}`,
       },

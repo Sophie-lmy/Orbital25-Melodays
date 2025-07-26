@@ -66,11 +66,7 @@ exports.saveProfile = async (req, res) => {
 };
 
 exports.getProfile = async (req, res) => {
-  const { userId } = req.query;
-
-  if (!userId) {
-    return res.status(400).json({ message: "Missing userId" });
-  }
+  const userId = req.user.id;
 
   try {
     const user = await userModel.findById(userId);
