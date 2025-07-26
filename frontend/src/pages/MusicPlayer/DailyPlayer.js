@@ -20,11 +20,22 @@ function DailyPlayer() {
       });
   }, []);
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     if (!audioRef.current) return;
-    isPlaying ? audioRef.current.pause() : audioRef.current.play();
-    setIsPlaying(!isPlaying);
+
+    try {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        await audioRef.current.play();
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.error("Playback error:", error);
+    }
   };
+
 
   if (!song) return <div className="music-player">Loading...</div>;
 
@@ -32,11 +43,11 @@ function DailyPlayer() {
     <div className="music-player">
       <div className="header">
         <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
-        <div className="tagline">Feel the Vibe</div>
+        <div className="tagline">Song of the Day</div>
       </div>
 
       <div className="cd-wrapper">
-        <img src="/player.gif" alt="cd" className="cd" />
+        <img src={song.cover || "/player.gif"} alt="Album Cover" className="cd" />
         <p className="songinfo">{song.title}</p>
         <p className="songinfo">{song.artist || "Unknown Artist"}</p>
       </div>
@@ -54,7 +65,9 @@ function DailyPlayer() {
 
         <button className="control-button" onClick={togglePlay}>
           <img
-            src= {isPlaying ? "/pausebutton.png" : "/playbutton.png"} alt="Play" className="control-icon"
+            src={isPlaying ? "/pausebutton.png" : "/playbutton.png"}
+            alt={isPlaying ? "Pause" : "Play"}
+            className="control-icon"
           />
         </button>
       </div>

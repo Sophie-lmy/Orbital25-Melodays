@@ -8,7 +8,7 @@ function Playlist() {
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    fetch('https://orbital25-melodays.onrender.com/get-profile', {
+    fetch('https://orbital25-melodays.onrender.com/auth/get-profile', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -20,7 +20,7 @@ function Playlist() {
       })
       .catch(err => console.error('Error fetching profile:', err));
 
-    fetch('https://orbital25-melodays.onrender.com/liked', {
+    fetch('https://orbital25-melodays.onrender.com/songs/liked', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
