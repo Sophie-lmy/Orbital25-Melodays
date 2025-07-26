@@ -38,7 +38,7 @@ function MoodPlayer() {
       }
 
       try {
-        const res = await fetch("https://orbital25-melodays.onrender.com/songs/liked", {
+        const res = await fetch("https://orbital25-melodays.onrender.com/songs/like", {
           method: "POST", 
           headers: {
             "Content-Type": "application/json", 
@@ -55,6 +55,25 @@ function MoodPlayer() {
         alert("Failed to like song."); 
         setLiked(false); 
       }
+    }
+  };
+
+
+  const unlikeSong = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const res = await fetch(`https://orbital25-melodays.onrender.com/songs/unlike/${spotifyId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      console.log(data.message);
+    } catch (err) {
+      console.error("Error unliking song:", err);
     }
   };
 
