@@ -7,6 +7,7 @@ function Playlist() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    console.log("JWT token from localStorage:", token); // for testing
 
     fetch('https://orbital25-melodays.onrender.com/auth/get-profile', {
       headers: {
