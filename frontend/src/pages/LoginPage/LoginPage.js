@@ -30,7 +30,7 @@ function LoginPage() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         alert(`${isLogin ? 'Login' : 'Sign up'} successful!`);
-        navigate('/setupaccount');
+        window.location.href = '/setupaccount';  // 强制刷新页面，确保新 token 生效
       } else {
         alert(data.message || `${isLogin ? 'Login' : 'Sign up'} failed.`);
       }

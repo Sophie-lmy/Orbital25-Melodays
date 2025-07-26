@@ -1,17 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
 
 function HomePage() {
-  const navigate = useNavigate();
-
   const handleLogout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('userId');
+    localStorage.removeItem('user');
+    localStorage.removeItem('spotify_access_token');
+    localStorage.removeItem('spotify_token_expiry');
 
-    navigate('/');
+    window.location.href = '/';
   };
-
 
   return (
     <div className="homepage-wrapper">
@@ -42,5 +40,3 @@ function HomePage() {
 }
 
 export default HomePage;
-
-
