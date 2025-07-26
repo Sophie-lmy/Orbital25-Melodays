@@ -44,7 +44,13 @@ function MoodPlayer() {
             "Content-Type": "application/json", 
             Authorization: `Bearer ${token}` 
           },
-          body: JSON.stringify(song) 
+          body: JSON.stringify({
+            spotify_track_id: song.id,
+            track_name: song.title,
+            artist_name: song.artist,
+            album_name: song.album,
+            album_image_url: song.cover
+          })
         });
 
         if (!res.ok) throw new Error("Failed to like song"); 
