@@ -17,13 +17,6 @@ exports.likeSong = async (req, res) => {
       VALUES ($1, $2, $3, $4, $5, $6)
     `, [userId, spotify_track_id, track_name, artist_name, album_name, album_image_url]);
 
-    await db.query(`
-      INSERT INTO diary_entries 
-      (user_id, type, spotify_track_id, track_name, artist_name, album_name, album_image_url)
-      VALUES 
-      ($1, 'like', $2, $3, $4, $5, $6)
-    `, [userId, spotify_track_id, track_name, artist_name, album_name, album_image_url]);
-
     res.status(201).json({ message: 'Song liked successfully.' });
   } catch (err) {
     if (err.code === '23505') {

@@ -64,7 +64,15 @@ const MusicHistory = () => {
       ? `https://orbital25-melodays.onrender.com/songs/unlike/${spotifyId}`
       : `https://orbital25-melodays.onrender.com/songs/like`;
     const method = isLiked ? 'DELETE' : 'POST';
-    const body = isLiked ? null : JSON.stringify({ spotify_track_id: spotifyId });
+    const body = isLiked 
+      ? null 
+      : JSON.stringify({
+        spotify_track_id: entry.spotify_track_id,
+        track_name: entry.track_name,
+        artist_name: entry.artist_name,
+        album_name: entry.album_name,
+        album_image_url: entry.album_image_url
+      });
 
     try {
       const res = await fetch(url, {

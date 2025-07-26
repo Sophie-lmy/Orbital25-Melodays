@@ -100,8 +100,8 @@ function MoodPlayer() {
 
       <div className="cd-wrapper">
         <img src={song.cover || "/player.gif"} alt="Album Cover" className="cd" />
-        <p className="songinfo">{song.title}</p>
-        <p className="songinfo">{song.artist || "Unknown Artist"}</p>
+        <p className="songtitle">{song.title}</p>
+        <p className="songartist">{song.artist || "Unknown Artist"}</p>
       </div>
 
       <audio ref={audioRef} src={song.preview_url} />

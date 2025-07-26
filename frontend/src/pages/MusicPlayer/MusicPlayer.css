@@ -45,9 +45,14 @@
   margin-bottom: 20px;
 }
 
-.songinfo {
+.songtitle {
   font-size: 25px;
   margin-top: 23px;
+}
+
+.songartist {
+  font-size: 22px;
+  margin-top: 16px;
 }
 
 .controls {
