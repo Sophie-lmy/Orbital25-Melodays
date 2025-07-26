@@ -143,7 +143,7 @@ const MusicHistory = () => {
                   onClick={() => toggleLike(entry.spotify_track_id)}
                 >
                   <img
-                    src={likedTracks.includes(entry.spotify_track_id) ? '/redheart.png' : '/heart.png'}
+                    src={likedTracks.includes(entry.spotify_track_id) ? '/redheart-whitebg.png' : '/heart.png'}
                     alt="Like"
                     className="heart-icon"
                   />

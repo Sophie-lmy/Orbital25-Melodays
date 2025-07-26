@@ -21,6 +21,7 @@
   flex-direction: column;
   gap: 45px;
   justify-content: center;
+  color: white;
 }
 
 .right-panel ul {
@@ -31,6 +32,7 @@
 .right-panel li {
   margin-bottom: 10px;
   line-height: 1.4;
+  font-size: 16px;
 }
 
 .playlist-logo {

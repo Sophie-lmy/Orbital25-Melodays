@@ -47,7 +47,10 @@ exports.getDailyRecommendation = async (req, res) => {
 
   try {
     const user = await userModel.findById(userId);
-    if (!user) return res.status(404).json({ error: "User not found." });
+    if (!user) {
+      console.log("User not found");
+      return res.status(404).json({ error: "User not found." });
+    }
 
     const today = new Date().toISOString().split("T")[0];
 
@@ -56,12 +59,22 @@ exports.getDailyRecommendation = async (req, res) => {
       user.daily_recommendation_date &&
       user.daily_recommendation_date.toISOString().split("T")[0] === today
     ) {
+      console.log("Returning cached daily song.");
       return res.json(user.daily_recommendation);
     }
 
     const token = await userModel.getValidAccessToken(userId);
+    console.log("Spotify access token:", token);
+
     const query = buildSmartQuery();
+    console.log("Built query:", query);
+
     const song = await searchSongs(query, token);
+    console.log("Song from Spotify:", song);
+
+    if (!song) {
+      return res.status(500).json({ error: "No song found from Spotify." });
+    }
 
     await userModel.updateDailyRecommendation(userId, today, song);
 
