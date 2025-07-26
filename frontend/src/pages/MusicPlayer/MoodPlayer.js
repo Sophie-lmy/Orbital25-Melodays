@@ -4,38 +4,10 @@ import './MusicPlayer.css';
 
 function MoodPlayer() {
   const location = useLocation();
-  const [song, setSong] = useState(null);
+  const song = location.state?.song;
   const [isPlaying, setIsPlaying] = useState(false);
   const [liked, setLiked] = useState(false);
   const audioRef = useRef(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert("Please log in to get recommendation for mood.");
-      return;
-    }
-
-    fetch(`https://orbital25-melodays.onrender.com/recommend/mood`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch song for mood.");
-        }
-        return res.json();
-      })
-      .then(data => {
-        console.log('Fetched song:', data);
-        setSong(data);
-      })
-      .catch(err => {
-        console.error('Error loading song:', err);
-        setSong(null);
-      });
-  }, []);
 
   const togglePlay = async () => {
     if (!audioRef.current) return;
