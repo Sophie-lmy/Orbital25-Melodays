@@ -33,7 +33,10 @@ exports.spotifyCallback = async (req, res) => {
     const tokenRes = await axios.post("https://accounts.spotify.com/api/token", params);
     const { access_token, refresh_token, expires_in } = tokenRes.data;
 
-    await userModel.updateSpotifyTokens(userId, access_token, refresh_token);
+    const existingUser = await userModel.findById(userId);
+    const finalRefreshToken = refresh_token || existingUser.spotify_refresh_token;
+
+    await userModel.updateSpotifyTokens(userId, access_token, finalRefreshToken);
 
     res.redirect(
       `https://melodays-frontend.vercel.app/spotify-redirect?access_token=${access_token}&expires_in=${expires_in}`
