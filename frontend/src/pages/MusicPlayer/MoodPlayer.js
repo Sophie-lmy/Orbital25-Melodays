@@ -9,6 +9,8 @@ function MoodPlayer() {
   const [liked, setLiked] = useState(false);
   const audioRef = useRef(null);
 
+  if (!song) return <div className="music-player">Loading...</div>;
+
   const togglePlay = async () => {
     if (!audioRef.current) return;
 
@@ -27,17 +29,18 @@ function MoodPlayer() {
 
 
   const handleLikeToggle = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please log in to like/unlike songs.");
+      return;
+    }
+    
     const newLikedState = !liked;
     setLiked(newLikedState);
 
-    if (newLikedState) {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Please log in to like songs.");
-        return;
-      }
-
-      try {
+    try {
+      if (newLikedState) {
+      // LIKE request
         const res = await fetch("https://orbital25-melodays.onrender.com/songs/like", {
           method: "POST", 
           headers: {
@@ -53,37 +56,40 @@ function MoodPlayer() {
           })
         });
 
-        if (!res.ok) throw new Error("Failed to like song"); 
+        const data = await res.json();  // get backend message
 
-        console.log("Song liked successfully"); 
-      } catch (err) {
-        console.error("Error liking song:", err); 
-        alert("Failed to like song."); 
-        setLiked(false); 
+        if (res.status === 201) {
+          console.log("Backend says:", data.message); // "Song liked successfully."
+        } else if (res.status === 409) {
+          console.log("Backend says:", data.message); // "Song already liked."
+        } else {
+          console.error("Unexpected response:", data.message);
+        }
+      } else {
+        // UNLIKE request
+        const res = await fetch(`https://orbital25-melodays.onrender.com/songs/unlike/${song.id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          console.log("Backend says:", data.message);
+        } else {
+          console.warn("Backend responded with:", data.message);
+        }
       }
-    }
-  };
 
-
-  const unlikeSong = async () => {
-    const token = localStorage.getItem("token");
-
-    try {
-      const res = await fetch(`https://orbital25-melodays.onrender.com/songs/unlike/${spotifyId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-      console.log(data.message);
     } catch (err) {
-      console.error("Error unliking song:", err);
+      console.error("Error toggling like:", err);
+      setLiked(!newLikedState); // rollback visual state
+      alert("Something went wrong.");
     }
   };
 
-  if (!song) return <div className="music-player">Loading...</div>;
 
   return (
     <div className="music-player">
@@ -101,7 +107,7 @@ function MoodPlayer() {
       <audio ref={audioRef} src={song.preview_url} />
 
       <div className="controls">
-        <button className="control-button" onClick={() => setLiked(!liked)}>
+        <button className="control-button" onClick={handleLikeToggle}>
           <img
             src={liked ? "/redheart.png" : "/heart.png"}
             alt={liked ? "Liked" : "Like"}
