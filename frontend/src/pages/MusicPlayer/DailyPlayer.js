@@ -18,6 +18,7 @@ function DailyPlayer() {
 
   const fetchDailySong = async () => {
     try {
+      const token = localStorage.getItem("token");
       const res = await fetch("https://orbital25-melodays.onrender.com/daily", {
         headers: {
           Authorization: `Bearer ${token}`

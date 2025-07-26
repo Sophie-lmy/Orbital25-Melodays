@@ -38,9 +38,12 @@ const DiaryDetail = () => {
   try {
     const token = localStorage.getItem('token');
     const res = await fetch(`https://orbital25-melodays.onrender.com/diary/${id}`, {
+      method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${token}`,
-      }
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ note: comment }) 
     });
 
     if (!res.ok) {
@@ -72,7 +75,7 @@ const DiaryDetail = () => {
         {entry.album_name && <p><strong>💿 Album:</strong> {entry.album_name}</p>}
         <p>
           <strong>🔗</strong>{' '}
-          <a href={entry.external_url} target="_blank" rel="noreferrer">
+          <a href={{entry.spotify_url}} target="_blank" rel="noreferrer">
             Listen on Spotify
           </a>
         </p>

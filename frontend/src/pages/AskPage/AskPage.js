@@ -21,7 +21,7 @@ const AskPage = () => {
   if (!question.trim()) return;
 
   try {
-    const res = await fetch('https://orbital25-melodays.onrender.com/api/fortune', {
+    const res = await fetch('https://orbital25-melodays.onrender.com/fortune', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
