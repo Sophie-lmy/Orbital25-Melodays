@@ -12,7 +12,7 @@ const cardImages = {
 
 function FortunePlayer() {
   const location = useLocation();
-  const song = location.state?.song;
+  const { song, card, question } = location.state || {};
   const [isPlaying, setIsPlaying] = useState(false);
   const [liked, setLiked] = useState(false);
   const audioRef = useRef(null);

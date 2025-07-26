@@ -64,36 +64,42 @@ const MusicHistory = () => {
       ? `https://orbital25-melodays.onrender.com/songs/unlike/${spotifyId}`
       : `https://orbital25-melodays.onrender.com/songs/like`;
     const method = isLiked ? 'DELETE' : 'POST';
-    const body = isLiked 
-      ? null 
-      : JSON.stringify({
-        spotify_track_id: entry.spotify_track_id,
-        track_name: entry.track_name,
-        artist_name: entry.artist_name,
-        album_name: entry.album_name,
-        album_image_url: entry.album_image_url
-      });
 
-    try {
-      const res = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body,
-      });
+    // Find the entry that matches the spotifyId
+    const entry = entries.find(entry => entry.spotify_track_id === spotifyId);
+    
+    if (entry) {
+      const body = isLiked 
+        ? null 
+        : JSON.stringify({
+          spotify_track_id: entry.spotify_track_id,
+          track_name: entry.track_name,
+          artist_name: entry.artist_name,
+          album_name: entry.album_name,
+          album_image_url: entry.album_image_url
+        });
 
-      if (res.ok) {
-        setLikedTracks(prev =>
-          isLiked ? prev.filter(id => id !== spotifyId) : [...prev, spotifyId]
-        );
-      } else {
-        console.error('Failed to toggle like');
+      try {
+        const res = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body,
+        });
+
+        if (res.ok) {
+          setLikedTracks(prev =>
+            isLiked ? prev.filter(id => id !== spotifyId) : [...prev, spotifyId]
+          );
+        } else {
+          console.error('Failed to toggle like');
+        }
+      } catch (err) {
+        console.error('Error toggling like:', err);
       }
-    } catch (err) {
-      console.error('Error toggling like:', err);
-    }
+    } 
   };
   
 
