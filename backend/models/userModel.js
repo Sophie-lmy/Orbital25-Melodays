@@ -4,6 +4,28 @@ const axios = require("axios");
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 
+exports.findByEmail = async (email) => {
+  const result = await db.query("SELECT * FROM users WHERE email = $1", [email]);
+  return result.rows[0];
+};
+
+exports.createUser = async (username, email, hashedPassword) => {
+  const result = await db.query(
+    "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *",
+    [username, email, hashedPassword]
+  );
+  return result.rows[0];
+};
+
+exports.findById = async (id) => {
+  const result = await db.query("SELECT * FROM users WHERE id = $1", [id]);
+  return result.rows[0];
+};
+
+exports.updateUsername = async (userId, username) => {
+  await db.query("UPDATE users SET username = $1 WHERE id = $2", [username, userId]);
+};
+
 exports.updateSpotifyTokens = async (userId, accessToken, refreshToken) => {
   if (refreshToken) {
     return db.query(
