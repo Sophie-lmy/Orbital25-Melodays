@@ -46,8 +46,8 @@ const MusicHistory = () => {
   const isLiked = likedTracks.includes(spotifyId);
 
   const url = isLiked
-    ? `/song/unlike/${spotifyId}`
-    : `/song/like`;
+    ? `https://orbital25-melodays.onrender.com/songs/unlike/${spotifyId}`
+    : `https://orbital25-melodays.onrender.com/songs/like`;
 
   const method = isLiked ? 'DELETE' : 'POST';
   const body = isLiked
@@ -127,7 +127,7 @@ const MusicHistory = () => {
                   onClick={() => toggleLike(entry.spotify_track_id)}
                 >
                   <img
-                    src={likedTracks.includes(entry.spotify_track_id) ? '/redheart.png' : '/emptyheart.png'}
+                    src={likedTracks.includes(entry.spotify_track_id) ? '/redheart.png' : '/heart.png'}
                     alt="Like"
                     className="heart-icon"
                   />

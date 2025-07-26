@@ -9,31 +9,38 @@ const DiaryDetail = () => {
   const [comment, setComment] = useState('');
 
   useEffect(() => {
-  const fetchEntry = async () => {
-    try {
-      const res = await fetch(`https://orbital25-melodays.onrender.com/diary/${id}`);
-      if (!res.ok) throw new Error("Failed to fetch diary entry");
-      const data = await res.json();
-      setEntry(data);
-      setComment(data.comment || '');
-    } catch (err) {
-      console.error(err);
-      alert("Could not load diary entry.");
-    }
-  };
+    const fetchEntry = async () => {
+      const token = localStorage.getItem('token');
 
-  fetchEntry();
-}, [id]);
+      try {
+        const res = await fetch(`https://orbital25-melodays.onrender.com/diary/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch diary entry");
+
+        const data = await res.json();
+        setEntry(data);
+        setComment(data.comment || '');
+      } catch (err) {
+        console.error(err);
+        alert("Could not load diary entry.");
+      }
+    };
+
+    fetchEntry();
+  }, [id]);
 
 
   const handleCommentSave = async () => {
   try {
+    const token = localStorage.getItem('token');
     const res = await fetch(`https://orbital25-melodays.onrender.com/diary/${id}`, {
-      method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ note: comment }),
+        'Authorization': `Bearer ${token}`,
+      }
     });
 
     if (!res.ok) {
