@@ -4,10 +4,39 @@ import './MusicPlayer.css';
 
 function DailyPlayer() {
   const location = useLocation();
-  const song = location.state?.song;
+  const [song, setSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [liked, setLiked] = useState(false);
   const audioRef = useRef(null);
+
+  useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Please log in to view your daily song.");
+    return;
+  }
+
+  const fetchDailySong = async () => {
+    try {
+      const res = await fetch("https://orbital25-melodays.onrender.com/daily", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch daily song");
+
+      const data = await res.json();
+      setSong(data);  
+    } catch (err) {
+      console.error("Error loading daily song:", err);
+      alert("Could not load your daily recommendation.");
+    }
+  };
+
+  fetchDailySong();
+}, []);
+
 
   if (!song) return <div className="music-player">Loading...</div>;
 

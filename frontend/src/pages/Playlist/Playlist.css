@@ -42,3 +42,10 @@
   margin-left: auto;       
   margin-right: auto;
 }
+
+.right-panel p,
+.right-panel ul,
+.right-panel li,
+.right-panel strong {
+  color: white;
+}
