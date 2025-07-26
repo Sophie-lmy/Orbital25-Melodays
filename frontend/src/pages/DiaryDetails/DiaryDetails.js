@@ -75,7 +75,7 @@ const DiaryDetail = () => {
         {entry.album_name && <p><strong>💿 Album:</strong> {entry.album_name}</p>}
         <p>
           <strong>🔗</strong>{' '}
-          <a href={{entry.spotify_url}} target="_blank" rel="noreferrer">
+          <a href={entry.spotify_url} target="_blank" rel="noreferrer">
             Listen on Spotify
           </a>
         </p>
