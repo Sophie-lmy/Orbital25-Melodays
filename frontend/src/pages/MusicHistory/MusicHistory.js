@@ -9,12 +9,12 @@ const MusicHistory = () => {
   const [likedTracks, setLikedTracks] = useState([]);
   const navigate = useNavigate();
 
+  const token = localStorage.getItem('token');
+
   const fetchEntries = () => {
     const params = new URLSearchParams();
     if (typeFilter) params.append('type', typeFilter);
     if (monthFilter) params.append('month', monthFilter);
-
-    const token = localStorage.getItem('token');
 
     fetch(`https://orbital25-melodays.onrender.com/diary?${params.toString()}`, {
       headers: {
@@ -23,62 +23,70 @@ const MusicHistory = () => {
     })
       .then(res => res.json())
       .then(data => {
-      console.log("Fetched diary entries:", data);
-      setEntries(data);
-    })
+        console.log("Fetched diary entries:", data);
+        setEntries(data);
+      })
       .catch(err => console.error('Diary fetch error:', err));
   };
 
-  useEffect(() => {
-  fetchEntries();
 
-  //fetch liked song IDs 
-  fetch('/song/liked')
-    .then(res => res.json())
-    .then(data => {
-      const likedIds = data.map(song => song.spotify_track_id);
-      setLikedTracks(likedIds);
+  const fetchLikedSongs = () => {
+    fetch('https://orbital25-melodays.onrender.com/songs/liked', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
-    .catch(err => console.error('Failed to load liked songs:', err));
-}, [typeFilter, monthFilter]);
+      .then(async res => {
+        const contentType = res.headers.get('content-type');
+        if (!res.ok || !contentType?.includes('application/json')) {
+          const text = await res.text();
+          console.error("Unexpected response for liked songs:", text);
+          throw new Error("Invalid JSON response");
+        }
+        return res.json();
+      })
+      .then(data => {
+        const likedIds = data.map(song => song.spotify_track_id);
+        setLikedTracks(likedIds);
+      })
+      .catch(err => console.error('Failed to load liked songs:', err));
+  };
 
-  const toggleLike = async (spotifyId) => {
-  const isLiked = likedTracks.includes(spotifyId);
-
-  const url = isLiked
-    ? `https://orbital25-melodays.onrender.com/songs/unlike/${spotifyId}`
-    : `https://orbital25-melodays.onrender.com/songs/like`;
-
-  const method = isLiked ? 'DELETE' : 'POST';
-  const body = isLiked
-    ? null
-    : JSON.stringify({ spotify_track_id: spotifyId });
-
-  try {
-    const res = await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body,
-    });
-
-    if (res.ok) {
-      setLikedTracks(prev =>
-        isLiked
-          ? prev.filter(id => id !== spotifyId)
-          : [...prev, spotifyId]
-      );
-    } else {
-      console.error('Failed to toggle like');
-    }
-  } catch (err) {
-    console.error('Error toggling like:', err);
-  }
-};
-
-  //fetch when filters change
   useEffect(() => {
     fetchEntries();
+    fetchLikedSongs();
   }, [typeFilter, monthFilter]);
+
+  
+  const toggleLike = async (spotifyId) => {
+    const isLiked = likedTracks.includes(spotifyId);
+    const url = isLiked
+      ? `https://orbital25-melodays.onrender.com/songs/unlike/${spotifyId}`
+      : `https://orbital25-melodays.onrender.com/songs/like`;
+    const method = isLiked ? 'DELETE' : 'POST';
+    const body = isLiked ? null : JSON.stringify({ spotify_track_id: spotifyId });
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body,
+      });
+
+      if (res.ok) {
+        setLikedTracks(prev =>
+          isLiked ? prev.filter(id => id !== spotifyId) : [...prev, spotifyId]
+        );
+      } else {
+        console.error('Failed to toggle like');
+      }
+    } catch (err) {
+      console.error('Error toggling like:', err);
+    }
+  };
   
 
   return (
