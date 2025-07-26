@@ -10,25 +10,41 @@ function ActivityPlayer() {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    fetch(`https://orbital25-melodays.onrender.com/recommend/activity`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ activity })
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    alert("Please log in to get activity recommendation.");
+    window.location.href = "/"; 
+    return;
+  }
+
+  fetch(`https://orbital25-melodays.onrender.com/recommend/activity`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ activity }),
+  })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error("Failed to fetch song for activity");
+      }
+      return res.json();
     })
-      .then(res => res.json())
-      .then(data => {
-        console.log('Fetched song:', data);
-        setSong(data);
-        if (audioRef.current) {
-          audioRef.current.load();
-        }
-        setIsPlaying(false);
-      })
-      .catch(err => {
-        console.error('Error loading song:', err);
-        setSong(null);
-      });
-  }, [activity]);
+    .then(data => {
+      console.log('Fetched song:', data);
+      setSong(data);
+      if (audioRef.current) {
+        audioRef.current.load();
+      }
+      setIsPlaying(false);
+    })
+    .catch(err => {
+      console.error('Error loading song:', err);
+      setSong(null);
+    });
+}, [activity]);
 
   const togglePlay = async () => {
     if (!audioRef.current) return;

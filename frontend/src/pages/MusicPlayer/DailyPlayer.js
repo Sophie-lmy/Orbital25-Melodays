@@ -8,8 +8,23 @@ function DailyPlayer() {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    fetch(`https://orbital25-melodays.onrender.com/daily`)
-      .then(res => res.json())
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("Please log in to access daily song.");
+      return;
+    }
+
+    fetch(`https://orbital25-melodays.onrender.com/daily`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch daily song");
+        }
+        return res.json();
+      })
       .then(data => {
         console.log('Daily song:', data);
         setSong(data);
