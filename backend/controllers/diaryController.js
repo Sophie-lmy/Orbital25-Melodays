@@ -5,8 +5,8 @@ exports.getAllDiaryEntries = async (req, res) => {
   const { types, month } = req.query;
 
   let query = `
-    SELECT id, type, spotify_track_id, track_name, artist_name, album_name, album_image_url, 
-           recommend_context, note, created_at
+    SELECT id, type, spotify_track_id, track_name, artist_name, album_name, album_image_url,
+           spotify_url, spotify_uri, recommend_context, note, created_at
     FROM diary_entries
     WHERE user_id = $1
   `;
@@ -43,7 +43,10 @@ exports.getDiaryEntryById = async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT * FROM diary_entries WHERE id = $1 AND user_id = $2`,
+      `SELECT id, type, spotify_track_id, track_name, artist_name, album_name, album_image_url,
+              spotify_url, spotify_uri, recommend_context, note, created_at
+       FROM diary_entries
+       WHERE id = $1 AND user_id = $2`,
       [diaryId, userId]
     );
 
@@ -90,7 +93,9 @@ exports.getAllEntriesWithNote = async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT * FROM diary_entries 
+      `SELECT id, type, spotify_track_id, track_name, artist_name, album_name, album_image_url,
+              spotify_url, spotify_uri, recommend_context, note, created_at
+       FROM diary_entries 
        WHERE user_id = $1 AND note IS NOT NULL AND TRIM(note) <> '' 
        ORDER BY created_at DESC`,
       [userId]
