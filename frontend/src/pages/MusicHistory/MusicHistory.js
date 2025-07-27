@@ -75,7 +75,9 @@ const MusicHistory = () => {
       track_name: entry.track_name,
       artist_name: entry.artist_name,
       album_name: entry.album_name,
-      album_image_url: entry.album_image_url
+      album_image_url: entry.album_image_url,
+      spotify_url: entry.spotify_url,
+      spotify_uri: entry.spotify_uri
     });
 
     try {
