@@ -101,10 +101,11 @@ function FortunePlayer() {
 
   return (
     <div className="music-player">
-      <div className="header">
+      <div className="fortune-header">
         <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
         <span className="tagline">Let Music Answer</span>
-        <a href="/" className="home-link">Home</a>
+      
+        <a href="/home" className="home-link">Home</a>
       </div>
 
       <div className="player-content">
@@ -114,9 +115,9 @@ function FortunePlayer() {
         </div>
 
         <div className="fortune-right-panel">
-          <img src={song.cover || '/player.gif'} alt="album" className="album-art" />
-          <h2 className="song-title">{song.title}</h2>
-          <p className="artist-name">{song.artist}</p>
+          <img src={song.album_image_url || '/player.gif'} alt="album" className="album-art" />
+          <h2 className="song-title">{song.track_name}</h2>
+          <p className="artist-name">{song.artist_name}</p>
 
           <audio ref={audioRef} src={song.preview_url} />
 
@@ -140,7 +141,7 @@ function FortunePlayer() {
 
           <div className="spotify-wrapper">
             <a
-              href={song.spotify_url}
+              href={song.external_url}
               target="_blank"
               rel="noopener noreferrer"
               className="spotify-link"

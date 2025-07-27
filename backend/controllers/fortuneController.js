@@ -31,7 +31,6 @@ exports.getMusicFortune = async (req, res) => {
 
 
     res.json({
-      id: result.id, 
       track_name: result.title,
       artist_name: result.artist,
       album_name: result.album,
