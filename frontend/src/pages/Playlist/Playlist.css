@@ -44,9 +44,13 @@
   margin-right: auto;
 }
 
-.right-panel p,
-.right-panel ul,
-.right-panel li,
-.right-panel strong {
+.song-link {
+  text-decoration: none;
   color: white;
+  transition: all 0.2s ease;
+}
+
+.song-link:hover {
+  text-decoration: underline;
+  color: #1DB954; 
 }

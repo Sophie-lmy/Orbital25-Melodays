@@ -46,7 +46,14 @@ function Playlist() {
           <ul>
             {likedSongs.map((song, index) => (
               <li key={index}>
-                <strong>{song.track_name}</strong> — {song.artist_name}
+                <a
+                  href={song.spotify_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="playlist-link"
+                >
+                  <strong>{song.track_name}</strong> — {song.artist_name}
+                </a>
               </li>
             ))}
           </ul>

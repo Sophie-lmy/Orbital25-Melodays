@@ -8,7 +8,7 @@ import MoodPlayer from './pages/MusicPlayer/MoodPlayer';
 import ActivityPlayer from './pages/MusicPlayer/ActivityPlayer';
 import DailyPlayer from './pages/MusicPlayer/DailyPlayer';
 import SetupAccount from './pages/SetupAccount/SetupAccount';
-import SpotifyRedirect from './pages/SpotifyRedirect';
+import SpotifyRedirect from './components/SpotifyRedirect';
 import FortunePage from './pages/FortunePage/FortunePage';
 import AskPage from './pages/AskPage/AskPage';
 import FortunePlayer from './pages/FortunePlayer/FortunePlayer';
