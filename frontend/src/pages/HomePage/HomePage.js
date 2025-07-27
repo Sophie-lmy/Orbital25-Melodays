@@ -21,6 +21,7 @@ function HomePage() {
 
         <div className="sidebar-links">
           <a href="/playlist">My Playlist</a>
+          <a href="/mood-summary">My Summary</a>
           <a onClick={handleLogout} className="sidebar-links" style={{ cursor: 'pointer' }}>
             Log out
           </a>
