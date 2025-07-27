@@ -1,6 +1,6 @@
 const db = require('../db');
 
-const getAllDiaryEntries = async (req, res) => {
+exports.getAllDiaryEntries = async (req, res) => {
   const userId = req.user.id;
   const { types, month } = req.query;
 
@@ -37,7 +37,7 @@ const getAllDiaryEntries = async (req, res) => {
   }
 };
 
-const getDiaryEntryById = async (req, res) => {
+exports.getDiaryEntryById = async (req, res) => {
   const userId = req.user.id;
   const diaryId = req.params.id;
 
@@ -58,7 +58,7 @@ const getDiaryEntryById = async (req, res) => {
   }
 };
 
-const updateDiaryNote = async (req, res) => {
+exports.updateDiaryNote = async (req, res) => {
   const userId = req.user.id;
   const diaryId = req.params.id;
   const { note } = req.body;
@@ -85,7 +85,7 @@ const updateDiaryNote = async (req, res) => {
   }
 };
 
-const getAllEntriesWithNote = async (req, res) => {
+exports.getAllEntriesWithNote = async (req, res) => {
   const userId = req.user.id;
 
   try {
@@ -103,7 +103,7 @@ const getAllEntriesWithNote = async (req, res) => {
   }
 };
 
-const getTypeFrequencies = async (req, res) => {
+exports.getTypeFrequencies = async (req, res) => {
   const userId = req.user.id;
 
   try {
@@ -116,20 +116,9 @@ const getTypeFrequencies = async (req, res) => {
       [userId]
     );
 
-    console.log("result.rows:", result.rows);
-
-    res.json(result.rows); 
+    res.json(result.rows);
   } catch (err) {
     console.error('Error fetching type frequencies:', err);
     res.status(500).json({ message: 'Failed to fetch type frequencies.' });
   }
-};
-
-
-module.exports = {
-  getAllDiaryEntries,
-  getDiaryEntryById,
-  updateDiaryNote,
-  getAllEntriesWithNote,
-  getTypeFrequencies
 };

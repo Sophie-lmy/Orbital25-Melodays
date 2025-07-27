@@ -13,20 +13,22 @@ exports.likeSong = async (req, res) => {
   } = req.body;
 
   try {
-    await db.query(`
-      INSERT INTO liked_songs 
-      (user_id, spotify_track_id, track_name, artist_name, album_name, album_image_url, spotify_url, spotify_uri)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-    `, [
-      userId,
-      spotify_track_id,
-      track_name,
-      artist_name,
-      album_name,
-      album_image_url,
-      spotify_url,
-      spotify_uri
-    ]);
+    await db.query(
+      `INSERT INTO liked_songs 
+        (user_id, spotify_track_id, track_name, artist_name, album_name, album_image_url, spotify_url, spotify_uri)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `,
+      [
+        userId,
+        spotify_track_id,
+        track_name,
+        artist_name,
+        album_name,
+        album_image_url,
+        spotify_url,
+        spotify_uri
+      ]
+    );
 
     res.status(201).json({ message: 'Song liked successfully.' });
   } catch (err) {
@@ -43,7 +45,15 @@ exports.getLikedSongs = async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT spotify_track_id, track_name, artist_name, album_name, album_image_url, spotify_url, spotify_uri, liked_at
+      `SELECT 
+         spotify_track_id, 
+         track_name, 
+         artist_name, 
+         album_name, 
+         album_image_url, 
+         spotify_url, 
+         spotify_uri, 
+         liked_at
        FROM liked_songs
        WHERE user_id = $1
        ORDER BY liked_at DESC`,
@@ -63,7 +73,8 @@ exports.unlikeSong = async (req, res) => {
 
   try {
     const result = await db.query(
-      `DELETE FROM liked_songs WHERE user_id = $1 AND spotify_track_id = $2`,
+      `DELETE FROM liked_songs 
+       WHERE user_id = $1 AND spotify_track_id = $2`,
       [userId, trackId]
     );
 
