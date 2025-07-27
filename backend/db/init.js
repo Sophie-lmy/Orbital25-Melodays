@@ -83,8 +83,12 @@ async function initDatabase() {
       await pool.query(`
         CREATE TABLE meta (
           initialized_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          schema_version INT DEFAULT 2
+          schema_version INT
         );
+      `);
+
+      await pool.query(`
+        INSERT INTO meta (schema_version) VALUES (2);
       `);
 
       console.log("Database reset and initialized to version 2.");
