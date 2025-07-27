@@ -27,10 +27,12 @@ function Playlist() {
       },
     })
       .then(res => res.json())
-      .then(data => setLikedSongs(data))
+      .then(data => {
+        console.log("Fetched liked songs:", data); 
+        setLikedSongs(data);
+      })
       .catch(err => console.error('Error fetching liked songs:', err));
   }, []);
-
 
   return (
     <div className="profile-container">

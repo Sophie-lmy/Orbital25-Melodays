@@ -17,6 +17,8 @@ function FortunePlayer() {
   const [liked, setLiked] = useState(false);
   const audioRef = useRef(null);
 
+  console.log("FortunePlayer song object:", song);
+
   if (!song) return <div className="music-player">Loading...</div>;
 
   const togglePlay = async () => {
@@ -61,7 +63,8 @@ function FortunePlayer() {
             artist_name: song.artist,
             album_name: song.album,
             album_image_url: song.cover,
-            spotify_url: song.external_url
+            spotify_url: song.external_url || '',       
+            spotify_uri: song.uri || ''         
           })
         });
 
