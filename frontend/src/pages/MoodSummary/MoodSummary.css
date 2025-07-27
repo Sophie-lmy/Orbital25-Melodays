@@ -1,5 +1,5 @@
 .mood-summary-container {
-  width: 100%;
+  width: 80%;
   min-height: 100vh;
   padding: 2rem;
   background-color: #6600cc; 
@@ -17,7 +17,7 @@
 }
 
 .chart-wrapper {
-  background-color: #fafafa;
+  background-color: white;
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);

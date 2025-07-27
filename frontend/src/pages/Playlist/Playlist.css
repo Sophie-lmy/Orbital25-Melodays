@@ -28,12 +28,14 @@
 .right-panel ul {
   list-style: none;
   padding-left: 0;
+  color: white;
 }
 
 .right-panel li {
   margin-bottom: 10px;
   line-height: 1.4;
   font-size: 16px;
+  color: white;
 }
 
 .playlist-logo {
@@ -44,13 +46,13 @@
   margin-right: auto;
 }
 
-.song-link {
+.playlist-link {
   text-decoration: none;
   color: white;
   transition: all 0.2s ease;
 }
 
-.song-link:hover {
+.playlist-link:hover {
   text-decoration: underline;
   color: #1DB954; 
 }
