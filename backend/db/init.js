@@ -94,6 +94,16 @@ async function initDatabase() {
       `);
 
       await pool.query(`
+        DELETE FROM diary_entries
+        WHERE type NOT IN (
+          'Mood-Happy', 'Mood-Sad', 'Mood-Angry', 'Mood-Loved', 'Mood-Nostalgic',
+          'Activity-Focusing', 'Activity-Exercising', 'Activity-Sleeping', 'Activity-Relaxing', 'Activity-Commuting',
+          'Fortune-Love', 'Fortune-Career', 'Fortune-Choice', 'Fortune-SelfDiscovery',
+          'Daily'
+        );
+      `);
+
+      await pool.query(`
         DO $$
         BEGIN
           IF EXISTS (
