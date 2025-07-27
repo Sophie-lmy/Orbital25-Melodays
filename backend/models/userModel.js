@@ -88,3 +88,18 @@ exports.getValidAccessToken = async (userId) => {
     throw new Error("Spotify access token is invalid and cannot be refreshed.");
   }
 };
+
+exports.updateDailyRecommendation = async (userId, date, recommendation) => {
+  try {
+    await db.query(
+      `UPDATE users 
+       SET daily_recommendation = $1,
+           daily_recommendation_date = $2
+       WHERE id = $3`,
+      [recommendation, date, userId]
+    );
+  } catch (err) {
+    console.error("Error updating daily recommendation:", err);
+    throw err;
+  }
+};
