@@ -2,16 +2,26 @@ const pool = require('./index');
 
 async function initDatabase() {
   try {
-    const metaCheck = await pool.query(`
-      SELECT to_regclass('public.meta') AS exists;
+    const versionCheck = await pool.query(`
+      SELECT column_name
+      FROM information_schema.columns
+      WHERE table_name='meta' AND column_name='schema_version';
     `);
 
-    const isFirstTime = !metaCheck.rows[0].exists;
+    let shouldReset = false;
 
-    if (isFirstTime) {
-      console.log("First-time startup: resetting database...");
+    if (versionCheck.rowCount === 0) {
+      shouldReset = true;
+    } else {
+      const versionQuery = await pool.query(`SELECT schema_version FROM meta LIMIT 1`);
+      const version = versionQuery.rows[0]?.schema_version || 0;
+      shouldReset = version < 2;
+    }
 
-      await pool.query(`DROP TABLE IF EXISTS diary_entries, liked_songs, users CASCADE;`);
+    if (shouldReset) {
+      console.log("Schema outdated or missing, resetting database...");
+
+      await pool.query(`DROP TABLE IF EXISTS diary_entries, liked_songs, users, meta CASCADE;`);
 
       await pool.query(`
         CREATE TABLE users (
@@ -37,6 +47,8 @@ async function initDatabase() {
           artist_name TEXT NOT NULL,
           album_name TEXT,
           album_image_url TEXT,
+          spotify_url TEXT,
+          spotify_uri TEXT,
           liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
       `);
@@ -70,11 +82,12 @@ async function initDatabase() {
 
       await pool.query(`
         CREATE TABLE meta (
-          initialized_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          initialized_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          schema_version INT DEFAULT 2
         );
       `);
 
-      console.log("Database reset and initialized successfully.");
+      console.log("Database reset and initialized to version 2.");
     } else {
       console.log("Subsequent startup: ensuring schema is up-to-date...");
 
@@ -86,6 +99,12 @@ async function initDatabase() {
         ADD COLUMN IF NOT EXISTS spotify_access_token TEXT,
         ADD COLUMN IF NOT EXISTS spotify_refresh_token TEXT,
         ADD COLUMN IF NOT EXISTS spotify_token_updated_at TIMESTAMP;
+      `);
+
+      await pool.query(`
+        ALTER TABLE liked_songs
+        ADD COLUMN IF NOT EXISTS spotify_url TEXT,
+        ADD COLUMN IF NOT EXISTS spotify_uri TEXT;
       `);
 
       await pool.query(`
