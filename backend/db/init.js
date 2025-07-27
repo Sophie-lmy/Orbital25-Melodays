@@ -15,7 +15,7 @@ async function initDatabase() {
     } else {
       const versionQuery = await pool.query(`SELECT schema_version FROM meta LIMIT 1`);
       const version = versionQuery.rows[0]?.schema_version || 0;
-      shouldReset = version < 2;
+      shouldReset = version < 3;
     }
 
     if (shouldReset) {
@@ -67,6 +67,8 @@ async function initDatabase() {
           artist_name TEXT,
           album_name TEXT,
           album_image_url TEXT,
+          spotify_url TEXT,
+          spotify_uri TEXT,
           recommend_context JSONB,
           note TEXT,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -88,12 +90,22 @@ async function initDatabase() {
       `);
 
       await pool.query(`
-        INSERT INTO meta (schema_version) VALUES (2);
+        INSERT INTO meta (schema_version) VALUES (3);
       `);
 
-      console.log("Database reset and initialized to version 2.");
+      console.log("Database reset and initialized to version 3.");
     } else {
-      console.log("Subsequent startup: ensuring schema is up-to-date...");
+      console.log("Checking schema version.");
+
+      const versionQuery = await pool.query(`SELECT schema_version FROM meta LIMIT 1`);
+      const version = versionQuery.rows[0]?.schema_version || 0;
+
+      if (version >= 3) {
+        console.log("Schema version is already 3. Skipping migrations.");
+        return;
+      }
+
+      console.log("Applying migrations to bring schema up to version 3.");
 
       await pool.query(`
         ALTER TABLE users
@@ -152,10 +164,16 @@ async function initDatabase() {
 
       await pool.query(`
         ALTER TABLE diary_entries
+        ADD COLUMN IF NOT EXISTS spotify_url TEXT,
+        ADD COLUMN IF NOT EXISTS spotify_uri TEXT,
         DROP COLUMN IF EXISTS question;
       `);
 
-      console.log("Schema migration completed.");
+      await pool.query(`
+        UPDATE meta SET schema_version = 3;
+      `);
+
+      console.log("Schema migration to version 3 completed.");
     }
   } catch (err) {
     console.error("Error initializing database:", err);
