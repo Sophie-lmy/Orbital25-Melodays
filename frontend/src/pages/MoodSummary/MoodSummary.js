@@ -19,6 +19,7 @@ const MoodSummary = () => {
     })
       .then(res => res.json())
       .then(data => {
+        console.log("Fetched summary:", data); 
         if (!Array.isArray(data)) {
           throw new Error('Invalid summary response');
         }

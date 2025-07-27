@@ -116,6 +116,8 @@ const getTypeFrequencies = async (req, res) => {
       [userId]
     );
 
+    console.log("result.rows:", result.rows);
+
     res.json(result.rows); 
   } catch (err) {
     console.error('Error fetching type frequencies:', err);
