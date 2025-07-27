@@ -19,6 +19,9 @@ const MoodSummary = () => {
     })
       .then(res => res.json())
       .then(data => {
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid summary response');
+        }
         //categorize
         const mood = data.filter(item => item.type.startsWith('Mood'));
         const activity = data.filter(item => item.type.startsWith('Activity'));
