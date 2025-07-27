@@ -63,8 +63,8 @@ function FortunePlayer() {
             artist_name: song.artist,
             album_name: song.album,
             album_image_url: song.cover,
-            spotify_url: song.external_url || '',       
-            spotify_uri: song.uri || ''         
+            spotify_url: song.external_urls?.spotify, 
+            spotify_uri: song.uri        
           })
         });
 
