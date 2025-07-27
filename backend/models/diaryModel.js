@@ -8,6 +8,9 @@ exports.createDiaryEntry = async ({
   note = null
 }) => {
   try {
+    const serializedContext =
+      recommend_context !== null ? JSON.stringify(recommend_context) : null;
+
     await db.query(
       `INSERT INTO diary_entries (
         user_id,
@@ -28,7 +31,7 @@ exports.createDiaryEntry = async ({
         song.artist,
         song.album,
         song.cover,
-        recommend_context,
+        serializedContext,
         note
       ]
     );
