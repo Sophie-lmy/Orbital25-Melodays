@@ -16,6 +16,7 @@ import MusicHistory from './pages/MusicHistory/MusicHistory';
 import DiaryDetails from './pages/DiaryDetails/DiaryDetails';
 import Playlist from './pages/Playlist/Playlist';
 import SpotifyPlayer from './components/SpotifyPlayer';
+import MoodSummary from './pages/MoodSummary/MoodSummary';
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
         <Route path="/music-history" element={<MusicHistory />} />
         <Route path="/diary/:id" element={<DiaryDetails />} />
         <Route path="/playlist" element={<Playlist />} /> 
+        <Route path="/mood-summary" element={<MoodSummary />} />
 
       </Routes>
     </Router>

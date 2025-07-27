@@ -103,9 +103,31 @@ const getAllEntriesWithNote = async (req, res) => {
   }
 };
 
+const getTypeFrequencies = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const result = await db.query(
+      `SELECT type, COUNT(*) AS frequency
+       FROM diary_entries
+       WHERE user_id = $1
+       GROUP BY type
+       ORDER BY frequency DESC`,
+      [userId]
+    );
+
+    res.json(result.rows); 
+  } catch (err) {
+    console.error('Error fetching type frequencies:', err);
+    res.status(500).json({ message: 'Failed to fetch type frequencies.' });
+  }
+};
+
+
 module.exports = {
   getAllDiaryEntries,
   getDiaryEntryById,
   updateDiaryNote,
-  getAllEntriesWithNote
+  getAllEntriesWithNote,
+  getTypeFrequencies
 };

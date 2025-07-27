@@ -1,0 +1,25 @@
+.mood-summary-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #6600cc; 
+  font-family: 'Georgia', serif;
+  color: white;
+}
+
+.mood-summary-container h2 {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  font-size: 1.6rem;
+  color: #6600cc;
+  border-left: 6px solid #6600cc;
+  padding-left: 10px;
+}
+
+.chart-wrapper {
+  background-color: #fafafa;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2.5rem;
+}
