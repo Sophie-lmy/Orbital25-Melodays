@@ -11,11 +11,10 @@ function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const endpoint = isLogin ? 'login' : 'register';
-    const defaultUsername = email.split('@')[0];
 
     const body = isLogin
       ? { email, password }
-      : { username: defaultUsername, email, password };
+      : { email, password };
 
     try {
       const response = await fetch(`https://orbital25-melodays.onrender.com/auth/${endpoint}`, {

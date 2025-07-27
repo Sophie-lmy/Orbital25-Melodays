@@ -6,7 +6,7 @@ const DiaryDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [entry, setEntry] = useState(null);
-  const [comment, setComment] = useState('');
+  const [note, setNote] = useState('');
 
   useEffect(() => {
     const fetchEntry = async () => {
@@ -23,7 +23,7 @@ const DiaryDetails = () => {
 
         const data = await res.json();
         setEntry(data);
-        setComment(data.comment || '');
+        setNote(data.note || '');
       } catch (err) {
         console.error(err);
         alert("Could not load diary entry.");
@@ -33,37 +33,36 @@ const DiaryDetails = () => {
     fetchEntry();
   }, [id]);
 
+  const handleNoteSave = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`https://orbital25-melodays.onrender.com/diary/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ note })
+      });
 
-  const handleCommentSave = async () => {
-  try {
-    const token = localStorage.getItem('token');
-    const res = await fetch(`https://orbital25-melodays.onrender.com/diary/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ note: comment }) 
-    });
+      if (!res.ok) {
+        throw new Error('Failed to save note');
+      }
 
-    if (!res.ok) {
-      throw new Error('Failed to save comment');
+      alert('Note saved!');
+    } catch (err) {
+      console.error(err);
+      alert('Error saving note');
     }
-
-    alert('Comment saved!');
-  } catch (err) {
-    console.error(err);
-    alert('Error saving comment');
-  }
-};
+  };
 
   if (!entry) return <div className="diary-detail-page">Loading...</div>;
 
   return (
     <div className="diary-detail-page">
       <div className="diary-header">
-          <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
-          <div className="tagline">Music Journal</div>
+        <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
+        <div className="tagline">Music Journal</div>
       </div>
 
       <div className="diary-detail-container">
@@ -75,21 +74,21 @@ const DiaryDetails = () => {
         {entry.album_name && <p><strong>💿 Album:</strong> {entry.album_name}</p>}
         <p>
           <strong>🔗</strong>{' '}
-          <a href={entry.spotify_url} target="_blank" rel="noreferrer">
+          <a href={entry.spotify_url || `https://open.spotify.com/track/${entry.spotify_track_id}`} target="_blank" rel="noreferrer">
             Listen on Spotify
           </a>
         </p>
 
         <label className="comment-label">💬 Your Journal:</label>
         <textarea
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
           rows={4}
           placeholder="Write your thoughts here..."
         />
 
         <div className="button-row">
-          <button onClick={handleCommentSave}>Save Comment</button>
+          <button onClick={handleNoteSave}>Save Note</button>
           <button onClick={() => navigate('/music-history')}>↩ Back to History</button>
         </div>
       </div>

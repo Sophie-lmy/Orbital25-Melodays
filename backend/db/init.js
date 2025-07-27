@@ -16,7 +16,7 @@ async function initDatabase() {
       await pool.query(`
         CREATE TABLE users (
           id SERIAL PRIMARY KEY,
-          username VARCHAR(100) NOT NULL,
+          username VARCHAR(100),
           email VARCHAR(100) UNIQUE NOT NULL,
           password TEXT NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -76,6 +76,7 @@ async function initDatabase() {
 
       await pool.query(`
         ALTER TABLE users
+        ALTER COLUMN username DROP NOT NULL,
         ADD COLUMN IF NOT EXISTS daily_recommendation JSONB,
         ADD COLUMN IF NOT EXISTS daily_recommendation_date DATE,
         ADD COLUMN IF NOT EXISTS spotify_access_token TEXT,

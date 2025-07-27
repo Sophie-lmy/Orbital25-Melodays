@@ -3,14 +3,15 @@ const userModel = require("../models/userModel");
 const { hashPassword, comparePassword } = require("../utils/hash");
 
 exports.register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { email, password } = req.body;
   try {
     const existingUser = await userModel.findByEmail(email);
     if (existingUser) {
       return res.status(400).json({ message: "This email is already registered." });
     }
+
     const hashed = await hashPassword(password);
-    const newUser = await userModel.createUser(username, email, hashed);
+    const newUser = await userModel.createUser(null, email, hashed);
     const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
     res.status(201).json({
