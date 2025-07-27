@@ -1,17 +1,20 @@
 import React, { useEffect } from 'react';
 
-function SpotifyPlayer({ accessToken }) {
+function SpotifyPlayer() {
   useEffect(() => {
-    if (!accessToken) return;
+    const accessToken = localStorage.getItem('spotify_access_token');
+    if (!accessToken) {
+      console.warn("No Spotify access token found.");
+      return;
+    }
 
     window.onSpotifyWebPlaybackSDKReady = () => {
       const player = new window.Spotify.Player({
         name: 'Melodays Web Player',
-        getOAuthToken: cb => { cb(accessToken); },
+        getOAuthToken: cb => cb(accessToken),
         volume: 0.5
       });
 
-      
       player.addListener('initialization_error', ({ message }) => {
         console.error('Initialization Error:', message);
       });
@@ -25,17 +28,17 @@ function SpotifyPlayer({ accessToken }) {
         console.error('Playback Error:', message);
       });
 
-      // Ready
+      //store the device_id for later use
       player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id);
-        // You can store device_id to transfer playback
+        console.log('Spotify Web Player ready with device ID:', device_id);
+        localStorage.setItem('spotify_device_id', device_id);
       });
 
       player.connect();
     };
-  }, [accessToken]);
+  }, []);
 
-  return null; 
+  return null;
 }
 
 export default SpotifyPlayer;

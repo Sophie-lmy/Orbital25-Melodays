@@ -13,40 +13,66 @@ function ActivityPlayer() {
 
 
   const playSong = async () => {
+  const token = localStorage.getItem('spotify_access_token');
+  const deviceId = localStorage.getItem('spotify_device_id');
+
+  if (!token || !song.spotify_uri || !deviceId) {
+    alert("Missing Spotify token, URI, or device ID.");
+    return;
+  }
+
+  try {
+    // Step 1: Transfer playback to the Web Playback SDK device
+    await fetch('https://api.spotify.com/v1/me/player', {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        device_ids: [deviceId],
+        play: false  // set false so it doesn't autoplay
+      })
+    });
+
+    // Step 2: Then trigger playback on that device
+    const res = await fetch('https://api.spotify.com/v1/me/player/play', {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        uris: [song.spotify_uri],
+        device_id: deviceId
+      })
+    });
+
+    if (res.ok) {
+      setIsPlaying(true);
+    } else {
+      const data = await res.json();
+      console.error("Spotify play error:", data);
+      alert("Unable to play.");
+    }
+  } catch (err) {
+    console.error("Play request failed:", err);
+    alert("Something went wrong while trying to play the song.");
+  }
+};
+
+
+  const pausePlayback = async () => {
     const token = localStorage.getItem('spotify_access_token');
-    if (!token || !song.spotify_uri) {
-      alert("Missing Spotify token or URI.");
+    const deviceId = localStorage.getItem('spotify_device_id');
+
+    if (!token || !deviceId) {
+      console.warn("Missing token or device ID.");
       return;
     }
 
     try {
-      const res = await fetch('https://api.spotify.com/v1/me/player/play', {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ uris: [song.spotify_uri] })
-      });
-
-      if (res.ok) {
-        setIsPlaying(true);
-      } else {
-        const data = await res.json();
-        console.error("Spotify play error:", data);
-        alert("Unable to play.");
-      }
-    } catch (err) {
-      console.error("Play request failed:", err);
-      alert("Something went wrong while trying to play the song.");
-    }
-  };
-
-  const pausePlayback = async () => {
-    const token = localStorage.getItem('spotify_access_token');
-
-    try {
-      const res = await fetch('https://api.spotify.com/v1/me/player/pause', {
+      const res = await fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`
@@ -56,12 +82,14 @@ function ActivityPlayer() {
       if (res.ok) {
         setIsPlaying(false);
       } else {
-        console.warn("Spotify pause failed.");
+        const data = await res.json();
+        console.warn("Spotify pause failed:", data);
       }
     } catch (err) {
       console.error("Pause request failed:", err);
     }
   };
+
 
   const togglePlay = async () => {
     if (isPlaying) {
