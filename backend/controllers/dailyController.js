@@ -27,12 +27,10 @@ function getCurrentSeason(date = new Date()) {
 function buildSmartQuery() {
   const now = new Date();
   const season = getCurrentSeason(now);
-
   const combinedPool = [
     ...keywordPool.general,
     ...keywordPool.season[season]
   ];
-
   const selected = sampleRandomWords(combinedPool, 2 + Math.floor(Math.random() * 2));
   return selected.join(" ");
 }
@@ -48,10 +46,7 @@ exports.getDailyRecommendation = async (req, res) => {
 
   try {
     const user = await userModel.findById(userId);
-    if (!user) {
-      console.log("User not found");
-      return res.status(404).json({ error: "User not found." });
-    }
+    if (!user) return res.status(404).json({ error: "User not found." });
 
     const today = new Date().toISOString().split("T")[0];
 
@@ -60,18 +55,12 @@ exports.getDailyRecommendation = async (req, res) => {
       user.daily_recommendation_date &&
       user.daily_recommendation_date.toISOString().split("T")[0] === today
     ) {
-      console.log("Returning cached daily song.");
       return res.json(user.daily_recommendation);
     }
 
     const token = await userModel.getValidAccessToken(userId);
-    console.log("Spotify access token:", token);
-
     const query = buildSmartQuery();
-    console.log("Built query:", query);
-
     const song = await searchSongs(query, token);
-    console.log("Song from Spotify:", song);
 
     if (!song) {
       return res.status(500).json({ error: "No song found from Spotify." });
@@ -80,12 +69,12 @@ exports.getDailyRecommendation = async (req, res) => {
     await userModel.updateDailyRecommendation(userId, today, song);
 
     await diaryModel.createDiaryEntry({
-    userId,
-    type: "Daily",
-    song,
-    recommend_context: null,
-    note: null
-  });
+      userId,
+      type: "Daily",
+      song,
+      recommend_context: null,
+      note: null
+    });
 
     res.json(song);
   } catch (err) {

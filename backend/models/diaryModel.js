@@ -20,9 +20,11 @@ exports.createDiaryEntry = async ({
         artist_name,
         album_name,
         album_image_url,
+        spotify_url,
+        spotify_uri,
         recommend_context,
         note
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
       [
         userId,
         type,
@@ -31,6 +33,8 @@ exports.createDiaryEntry = async ({
         song.artist,
         song.album,
         song.cover,
+        song.spotify_url,
+        song.spotify_uri,
         serializedContext,
         note
       ]
