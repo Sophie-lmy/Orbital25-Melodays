@@ -1,6 +1,6 @@
-const db = require('../db');
 const { searchSongs } = require('../models/songModel');
 const userModel = require('../models/userModel');
+const diaryModel = require('../models/diaryModel');
 
 const validThemes = ["love", "career", "choice", "self-discovery"];
 
@@ -17,21 +17,17 @@ exports.getMusicFortune = async (req, res) => {
     const query = `${type} ${question}`;
     const result = await searchSongs(query, token);
 
-    await db.query(
-      `INSERT INTO diary_entries (
-        user_id, type, question, 
-        spotify_track_id, track_name, artist_name, album_name, album_image_url
-      ) VALUES ($1, 'fortune', $2, $3, $4, $5, $6, $7)`,
-      [
-        userId,
-        question,
-        result.id,
-        result.title,
-        result.artist,
-        result.album,
-        result.cover
-      ]
-    );
+    if (!result || !result.id) {
+      return res.status(500).json({ error: 'No track found for this fortune.' });
+    }
+
+    await diaryModel.createDiaryEntry({
+      userId,
+      type: "fortune",
+      song: result,
+      recommend_context: JSON.stringify({ theme: type, question }),
+      note: null
+    });
 
     res.json({
       track_name: result.title,

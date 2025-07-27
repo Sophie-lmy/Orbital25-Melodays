@@ -1,6 +1,6 @@
 const { searchSongs } = require('../models/songModel');
 const userModel = require('../models/userModel');
-const db = require('../db');
+const diaryModel = require('../models/diaryModel');
 
 const moodKeywords = {
   happy: ['joyful', 'cheerful', 'sunshine', 'celebration'],
@@ -61,20 +61,13 @@ exports.recommendByMood = async (req, res) => {
       return res.status(500).json({ error: 'Failed to get valid recommendation after retries.' });
     }
 
-    await db.query(
-      `INSERT INTO diary_entries 
-        (user_id, type, spotify_track_id, track_name, artist_name, album_name, album_image_url, recommend_context)
-       VALUES ($1, 'mood', $2, $3, $4, $5, $6, $7)`,
-      [
-        userId,
-        track.id,
-        track.title,
-        track.artist,
-        track.album,
-        track.cover,
-        { mood }
-      ]
-    );
+    await diaryModel.createDiaryEntry({
+      userId,
+      type: 'mood',
+      song: track,
+      recommend_context: mood,
+      note: null
+    });
 
     res.json(track);
   } catch (err) {
@@ -103,20 +96,13 @@ exports.recommendByActivity = async (req, res) => {
       return res.status(500).json({ error: 'Failed to get valid recommendation after retries.' });
     }
 
-    await db.query(
-      `INSERT INTO diary_entries 
-        (user_id, type, spotify_track_id, track_name, artist_name, album_name, album_image_url, recommend_context)
-       VALUES ($1, 'activity', $2, $3, $4, $5, $6, $7)`,
-      [
-        userId,
-        track.id,
-        track.title,
-        track.artist,
-        track.album,
-        track.cover,
-        { activity }
-      ]
-    );
+    await diaryModel.createDiaryEntry({
+      userId,
+      type: 'activity',
+      song: track,
+      recommend_context: activity,
+      note: null
+    });
 
     res.json(track);
   } catch (err) {

@@ -1,4 +1,5 @@
 const userModel = require("../models/userModel");
+const diaryModel = require("../models/diaryModel");
 const { searchSongs } = require("../models/songModel");
 
 const keywordPool = {
@@ -77,6 +78,14 @@ exports.getDailyRecommendation = async (req, res) => {
     }
 
     await userModel.updateDailyRecommendation(userId, today, song);
+
+    await diaryModel.createDiaryEntry({
+      userId,
+      type: "daily",
+      song,
+      recommend_context: null,
+      note: null
+    });
 
     res.json(song);
   } catch (err) {
