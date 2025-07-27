@@ -101,67 +101,59 @@ function ActivityPlayer() {
 
 
   const handleLikeToggle = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Please log in to like/unlike songs.");
-      return;
-    }
-    
-    const newLikedState = !liked;
-    setLiked(newLikedState);
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("Please log in to like/unlike songs.");
+    return;
+  }
 
-    try {
-      if (newLikedState) {
-      // LIKE request
-        const res = await fetch("https://orbital25-melodays.onrender.com/songs/like", {
-          method: "POST", 
-          headers: {
-            "Content-Type": "application/json", 
-            Authorization: `Bearer ${token}` 
-          },
-          body: JSON.stringify({
-            spotify_track_id: song.id,
-            track_name: song.title,
-            artist_name: song.artist,
-            album_name: song.album,
-            album_image_url: song.cover
-          })
-        });
+  const newLikedState = !liked;
+  setLiked(newLikedState);
 
-        const data = await res.json();  // get backend message
+  try {
+    if (newLikedState) {
+      const res = await fetch("https://orbital25-melodays.onrender.com/songs/like", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          spotify_track_id: song.id,
+          track_name: song.title,
+          artist_name: song.artist,
+          album_name: song.album,
+          album_image_url: song.cover,
+          spotify_url: song.spotify_url,
+          spotify_uri: song.spotify_uri
+        })
+      });
 
-        if (res.status === 201) {
-          console.log("Backend says:", data.message); // "Song liked successfully."
-        } else if (res.status === 409) {
-          console.log("Backend says:", data.message); // "Song already liked."
-        } else {
-          console.error("Unexpected response:", data.message);
-        }
-      } else {
-        // UNLIKE request
-        const res = await fetch(`https://orbital25-melodays.onrender.com/songs/unlike/${song.id}`, {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+      const data = await res.json();
 
-        const data = await res.json();
-
-        if (res.ok) {
-          console.log("Backend says:", data.message);
-        } else {
-          console.warn("Backend responded with:", data.message);
-        }
+      if (res.status !== 201 && res.status !== 409) {
+        alert("Unexpected error occurred.");
       }
 
-    } catch (err) {
-      console.error("Error toggling like:", err);
-      setLiked(!newLikedState); // rollback visual state
-      alert("Something went wrong.");
-    }
-  };
+    } else {
+      const res = await fetch(`https://orbital25-melodays.onrender.com/songs/unlike/${song.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert("Failed to unlike the song.");
+      }
+    }
+  } catch (err) {
+    setLiked(!newLikedState);
+    alert("Something went wrong.");
+  }
+};
 
   return (
     <div className="music-player">
