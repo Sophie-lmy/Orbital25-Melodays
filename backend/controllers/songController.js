@@ -12,6 +12,8 @@ exports.likeSong = async (req, res) => {
     spotify_uri
   } = req.body;
 
+  const finalPreviewUrl = preview_url || ''; //allow preview to be null
+
   try {
     await db.query(`
       INSERT INTO liked_songs 
