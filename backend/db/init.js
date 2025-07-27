@@ -50,7 +50,6 @@ async function initDatabase() {
           id SERIAL PRIMARY KEY,
           user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
           type VARCHAR(50) NOT NULL,
-          question TEXT,
           spotify_track_id VARCHAR(100),
           track_name TEXT,
           artist_name TEXT,
@@ -60,7 +59,12 @@ async function initDatabase() {
           note TEXT,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           CONSTRAINT diary_entries_type_check
-            CHECK (type IN ('recommend', 'like', 'fortune', 'mood', 'activity', 'daily'))
+            CHECK (type IN (
+              'Mood-Happy', 'Mood-Sad', 'Mood-Angry', 'Mood-Loved', 'Mood-Nostalgic',
+              'Activity-Focusing', 'Activity-Exercising', 'Activity-Sleeping', 'Activity-Relaxing', 'Activity-Commuting',
+              'Fortune-Love', 'Fortune-Career', 'Fortune-Choice', 'Fortune-SelfDiscovery',
+              'Daily'
+            ))
         );
       `);
 
@@ -105,7 +109,17 @@ async function initDatabase() {
       await pool.query(`
         ALTER TABLE diary_entries
         ADD CONSTRAINT diary_entries_type_check
-        CHECK (type IN ('recommend', 'like', 'fortune', 'mood', 'activity', 'daily'));
+        CHECK (type IN (
+          'Mood-Happy', 'Mood-Sad', 'Mood-Angry', 'Mood-Loved', 'Mood-Nostalgic',
+          'Activity-Focusing', 'Activity-Exercising', 'Activity-Sleeping', 'Activity-Relaxing', 'Activity-Commuting',
+          'Fortune-Love', 'Fortune-Career', 'Fortune-Choice', 'Fortune-SelfDiscovery',
+          'Daily'
+        ));
+      `);
+
+      await pool.query(`
+        ALTER TABLE diary_entries
+        DROP COLUMN IF EXISTS question;
       `);
 
       console.log("Schema migration completed.");

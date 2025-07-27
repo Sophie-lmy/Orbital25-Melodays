@@ -22,12 +22,13 @@ exports.getMusicFortune = async (req, res) => {
     }
 
     await diaryModel.createDiaryEntry({
-      userId,
-      type: "fortune",
-      song: result,
-      recommend_context: JSON.stringify({ theme: type, question }),
-      note: null
+    userId,
+    type: `Fortune-${type[0].toUpperCase()}${type.slice(1).replace(/-/g, '')}`,
+    song: result,
+    recommend_context: { theme: type, question },
+    note: `I was wondering about: "${question}"`
     });
+
 
     res.json({
       track_name: result.title,

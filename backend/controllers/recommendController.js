@@ -61,9 +61,11 @@ exports.recommendByMood = async (req, res) => {
       return res.status(500).json({ error: 'Failed to get valid recommendation after retries.' });
     }
 
+    const moodType = `Mood-${mood[0].toUpperCase()}${mood.slice(1)}`;
+
     await diaryModel.createDiaryEntry({
       userId,
-      type: 'mood',
+      type: moodType,
       song: track,
       recommend_context: mood,
       note: null
@@ -96,9 +98,11 @@ exports.recommendByActivity = async (req, res) => {
       return res.status(500).json({ error: 'Failed to get valid recommendation after retries.' });
     }
 
+    const activityType = `Activity-${activity[0].toUpperCase()}${activity.slice(1)}`;
+
     await diaryModel.createDiaryEntry({
       userId,
-      type: 'activity',
+      type: activityType,
       song: track,
       recommend_context: activity,
       note: null
