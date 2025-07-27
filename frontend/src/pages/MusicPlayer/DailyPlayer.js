@@ -82,8 +82,11 @@ function DailyPlayer() {
             track_name: song.title,
             artist_name: song.artist,
             album_name: song.album,
-            album_image_url: song.cover
+            album_image_url: song.cover,
+            spotify_url: song.spotify_url,
+            spotify_uri: song.spotify_uri
           })
+
         });
 
         const data = await res.json();  // get backend message
