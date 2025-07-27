@@ -11,19 +11,63 @@ function ActivityPlayer() {
 
   if (!song) return <div className="music-player">Loading...</div>;
 
-  const togglePlay = async () => {
-    if (!audioRef.current) return;
+
+  const playSong = async () => {
+    const token = localStorage.getItem('spotify_access_token');
+    if (!token || !song.spotify_uri) {
+      alert("Missing Spotify token or URI.");
+      return;
+    }
 
     try {
-      if (isPlaying) {
-        audioRef.current.pause();
+      const res = await fetch('https://api.spotify.com/v1/me/player/play', {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ uris: [song.spotify_uri] })
+      });
+
+      if (res.ok) {
+        setIsPlaying(true);
+      } else {
+        const data = await res.json();
+        console.error("Spotify play error:", data);
+        alert("Unable to play.");
+      }
+    } catch (err) {
+      console.error("Play request failed:", err);
+      alert("Something went wrong while trying to play the song.");
+    }
+  };
+
+  const pausePlayback = async () => {
+    const token = localStorage.getItem('spotify_access_token');
+
+    try {
+      const res = await fetch('https://api.spotify.com/v1/me/player/pause', {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (res.ok) {
         setIsPlaying(false);
       } else {
-        await audioRef.current.play();
-        setIsPlaying(true);
+        console.warn("Spotify pause failed.");
       }
-    } catch (error) {
-      console.error("Playback error:", error);
+    } catch (err) {
+      console.error("Pause request failed:", err);
+    }
+  };
+
+  const togglePlay = async () => {
+    if (isPlaying) {
+      await pausePlayback();
+    } else {
+      await playSong();
     }
   };
 
@@ -93,9 +137,10 @@ function ActivityPlayer() {
 
   return (
     <div className="music-player">
-      <div className="header">
+      <div className="player-header">
         <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
         <div className="tagline">Activity Beats</div>
+        <a href="/home" className="home-link">Home</a>
       </div>
 
       <div className="cd-wrapper">
@@ -103,8 +148,6 @@ function ActivityPlayer() {
         <p className="songtitle">{song.title}</p>
         <p className="songartist">{song.artist || "Unknown Artist"}</p>
       </div>
-
-      <audio ref={audioRef} src={song.preview_url} />
 
       <div className="controls">
         <button className="control-button" onClick={handleLikeToggle}>

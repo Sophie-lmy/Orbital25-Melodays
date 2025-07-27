@@ -21,6 +21,7 @@ function FortunePage() {
       <div className="fortune-header">
         <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
         <div className="tagline">Let Music Answer</div>
+        <a href="/home" className="home-link">Home</a>
       </div>
 
       <h2 className="fortune-title">What truth are you seeking today?</h2>

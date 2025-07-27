@@ -49,6 +49,7 @@ function MoodPage() {
       <div className="mood-header">
         <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
         <div className="tagline">Feel the Vibe</div>
+        <a href="/home" className="home-link">Home</a>
       </div>
 
       <div className="mood-content">

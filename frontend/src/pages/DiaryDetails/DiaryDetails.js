@@ -63,6 +63,7 @@ const DiaryDetails = () => {
       <div className="diary-header">
         <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
         <div className="tagline">Music Journal</div>
+        <a href="/home" className="home-link">Home</a>
       </div>
 
       <div className="diary-detail-container">

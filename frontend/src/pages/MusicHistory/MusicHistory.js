@@ -105,7 +105,8 @@ const MusicHistory = () => {
       <div className="diarylist-container">
         <div className="diarylist-header">
           <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
-          <div className="tagline">Music Journal</div>
+          <div className="tagline">Music History</div>
+          <a href="/home" className="home-link">Home</a>
         </div>
 
         <div className="filters">

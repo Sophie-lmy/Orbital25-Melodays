@@ -49,6 +49,7 @@ function ActivityPage() {
       <div className="activity-header">
         <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
         <div className="tagline">Activity Beats</div>
+        <a href="/home" className="home-link">Home</a>
       </div>
 
       <div className="activity-content">

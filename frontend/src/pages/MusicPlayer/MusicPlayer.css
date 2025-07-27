@@ -8,12 +8,13 @@
   flex-direction: column;
 }
 
-.header {
+.player-header {
   background-color: black;
   padding: 30px 30px;
   display: flex;
   align-items: center;
   margin-bottom: 25px;
+  justify-content: space-between;
 }
 
 .logo {
@@ -22,7 +23,14 @@
 }
 
 .tagline {
+  font-size: 23px;
+}
+
+.home-link {
+  color: white;
+  text-decoration: underline;
   font-size: 20px;
+  cursor: pointer;
 }
 
 .player-content {
@@ -43,15 +51,16 @@
   max-width: 90vw;
   height: auto;
   margin-bottom: 20px;
+  border-radius: 8px;
 }
 
 .songtitle {
-  font-size: 25px;
+  font-size: 1.9rem;
   margin-top: 23px;
 }
 
 .songartist {
-  font-size: 21px;
+  font-size: 1.4rem;
   margin-top: 16px;
 }
 

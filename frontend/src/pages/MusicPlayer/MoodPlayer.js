@@ -93,9 +93,10 @@ function MoodPlayer() {
 
   return (
     <div className="music-player">
-      <div className="header">
+      <div className="player-header">
         <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
         <div className="tagline">Feel the Vibe</div>
+        <a href="/home" className="home-link">Home</a>
       </div>
 
       <div className="cd-wrapper">

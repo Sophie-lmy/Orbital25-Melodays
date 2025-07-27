@@ -15,10 +15,13 @@ import FortunePlayer from './pages/FortunePlayer/FortunePlayer';
 import MusicHistory from './pages/MusicHistory/MusicHistory';
 import DiaryDetails from './pages/DiaryDetails/DiaryDetails';
 import Playlist from './pages/Playlist/Playlist';
+import SpotifyPlayer from './components/SpotifyPlayer';
+
 
 function App() {
   return (
     <Router>
+      <SpotifyPlayer />
       <Routes>
         <Route path="/" element={<LoginPage />} /> 
         <Route path="/setupaccount" element={<SetupAccount />} />
