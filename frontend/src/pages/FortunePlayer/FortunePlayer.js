@@ -104,15 +104,16 @@ function FortunePlayer() {
       <div className="header">
         <img src="/logoblack.jpg" alt="Melodays Logo" className="logo" />
         <span className="tagline">Let Music Answer</span>
+        <a href="/" className="home-link">Home</a>
       </div>
 
       <div className="player-content">
-        <div className="left-panel">
+        <div className="fortune-left-panel">
           <img src={cardImages[card]} alt={card} className="tarot-img" />
           <p className="user-question">{question}</p>
         </div>
 
-        <div className="right-panel">
+        <div className="fortune-right-panel">
           <img src={song.cover || '/player.gif'} alt="album" className="album-art" />
           <h2 className="song-title">{song.title}</h2>
           <p className="artist-name">{song.artist}</p>
