@@ -5,28 +5,12 @@ import './MusicPlayer.css';
 function MoodPlayer() {
   const location = useLocation();
   const song = location.state?.song;
-  const [isPlaying, setIsPlaying] = useState(false);
   const [liked, setLiked] = useState(false);
   const audioRef = useRef(null);
 
   if (!song) return <div className="music-player">Loading...</div>;
 
-  const togglePlay = async () => {
-    if (!audioRef.current) return;
-
-    try {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        await audioRef.current.play();
-        setIsPlaying(true);
-      }
-    } catch (error) {
-      console.error("Playback error:", error);
-    }
-  };
-
+  
   const handleLikeToggle = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -102,14 +86,6 @@ function MoodPlayer() {
           <img
             src={liked ? "/redheart.png" : "/heart.png"}
             alt={liked ? "Liked" : "Like"}
-            className="control-icon"
-          />
-        </button>
-
-        <button className="control-button" onClick={togglePlay}>
-          <img
-            src={isPlaying ? "/pausebutton.png" : "/playbutton.png"}
-            alt={isPlaying ? "Pause" : "Play"}
             className="control-icon"
           />
         </button>

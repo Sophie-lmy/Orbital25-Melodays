@@ -5,7 +5,6 @@ import './MusicPlayer.css';
 function DailyPlayer() {
   const location = useLocation();
   const [song, setSong] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [liked, setLiked] = useState(false);
   const audioRef = useRef(null);
 
@@ -40,22 +39,6 @@ function DailyPlayer() {
 
 
   if (!song) return <div className="music-player">Loading...</div>;
-
-  const togglePlay = async () => {
-    if (!audioRef.current) return;
-
-    try {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        await audioRef.current.play();
-        setIsPlaying(true);
-      }
-    } catch (error) {
-      console.error("Playback error:", error);
-    }
-  };
 
 
   const handleLikeToggle = async () => {
@@ -149,13 +132,6 @@ function DailyPlayer() {
           />
         </button>
 
-        <button className="control-button" onClick={togglePlay}>
-          <img
-            src={isPlaying ? "/pausebutton.png" : "/playbutton.png"}
-            alt={isPlaying ? "Pause" : "Play"}
-            className="control-icon"
-          />
-        </button>
       </div>
 
       <div className="spotify-wrapper">
