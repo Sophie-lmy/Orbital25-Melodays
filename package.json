@@ -2,5 +2,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "react-router-dom": "^7.6.2"
+  },
+  "devDependencies": {
+    "cypress": "^14.5.3"
   }
 }
