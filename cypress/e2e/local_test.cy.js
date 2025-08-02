@@ -1,4 +1,15 @@
 describe("Melodays Local Test Suite", () => {
+
+  // cache log in
+  beforeEach(() => {
+    cy.session('loginSession', () => {
+      cy.visit("/");
+      cy.get('input[type="email"]').type("ciece0323@gmail.com");
+      cy.get('input[type="password"]').type("555666");
+      cy.get("button").contains("Log in").click();
+    });
+  });
+
   it("1) should load login page", () => {
     cy.visit("/");
     cy.contains("Email", "Password", "Log in"); 
