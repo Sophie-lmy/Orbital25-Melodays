@@ -37,6 +37,7 @@ function LoginPage() {
       }
     } catch (error) {
       console.error(`${endpoint} error:`, error);
+      alert('Please try again later.');
     }
   };
 
@@ -47,7 +48,7 @@ function LoginPage() {
 
         <label htmlFor="email">Email</label>
         <input
-          type="text"
+          type="email"
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
