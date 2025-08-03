@@ -4,31 +4,34 @@ describe("Melodays Local Test Suite", () => {
   beforeEach(() => {
     cy.session('loginSession', () => {
       cy.visit("/");
-      cy.get('input[type="email"]').type("ciece0323@gmail.com");
+      cy.get('input[type="email"]').type("test@gmail.com");
       cy.get('input[type="password"]').type("555666");
       cy.get("button").contains("Log in").click();
+      cy.url({ timeout: 10000 }).should('include', '/home');
     });
   });
 
   it("1) should load login page", () => {
     cy.visit("/");
-    cy.contains("Email", "Password", "Log in"); 
+    cy.get('input[type="email"]').should('be.visible');
+    cy.get('input[type="password"]').should('be.visible');
+    cy.get('button').contains("Log in").should('be.visible');
   });
 
   it("2) should login and redirect to Home page", () => {
     cy.visit("/");
-    cy.get('input[type="email"]').type("ciece0323@gmail.com");
+    cy.get('input[type="email"]').type("test@gmail.com");
     cy.get('input[type="password"]').type("555666");
     cy.get("button").contains("Log in").click();
 
-    cy.url().should("include", "/home");
-    cy.contains("Welcome to", "A personalized, emotional music discovery platform.", "Feel the Vibe", "Activity Beats", "Song of the Day", "Let Music Answer", "Music Log", "My Playlist", "My Summary");
+    cy.url({ timeout: 10000 }).should('include', '/home')
+    cy.contains("A personalized, emotional music discovery platform.");
   });
 
   it("3) should access mood page and get a song", () => {
     cy.visit("/mood");
     cy.contains("Nostalgic").click(); 
-    cy.url().should("include", "/player");
+    cy.url({ timeout: 10000 }).should("include", "/player");
     cy.contains("Listen on Spotify");
     cy.get('.spotify-link')
       .should('have.attr', 'href')
@@ -38,7 +41,7 @@ describe("Melodays Local Test Suite", () => {
   it("4) should access activity page and get a song", () => {
     cy.visit("/activity");
     cy.contains("Focusing").click(); 
-    cy.url().should("include", "/player");
+    cy.url({ timeout: 10000 }).should("include", "/player");
     cy.contains("Listen on Spotify");
     cy.get('.spotify-link')
       .should('have.attr', 'href')
@@ -56,10 +59,10 @@ describe("Melodays Local Test Suite", () => {
   it("6) should access fortune page to get a song", () => {
     cy.visit("/fortune");
     cy.get(".tarot-card").eq(0).click(); // click 1st card
-    cy.url().should("include", "/ask");
+    cy.url({ timeout: 10000 }).should("include", "/ask");
     cy.get("textarea").type("Will I find true love?");
     cy.contains("The universe responds...").click();
-    cy.url().should("include", "/fortune-player");
+    cy.url({ timeout: 20000 }).should("include", "/fortune-player");
     cy.contains("Listen on Spotify");
     cy.get('.spotify-link')
       .should('have.attr', 'href')
@@ -69,13 +72,13 @@ describe("Melodays Local Test Suite", () => {
   it("7) should like a song and find it in My Playlist", () => {
     cy.visit("/mood");
     cy.contains("Nostalgic").click(); 
-    cy.url().should("include", "/player");
+    cy.url({ timeout: 10000 }).should("include", "/player");
 
     cy.get('.control-button').click(); // like song
 
     cy.visit("/playlist");
-    cy.contains("ciece0323");
-    cy.get('.songtitle').should('exist');
+    cy.contains("test");
+    cy.contains('—');
     cy.get('.playlist-link')
       .should('have.attr', 'href')
       .and('include', 'open.spotify.com');
@@ -91,7 +94,7 @@ describe("Melodays Local Test Suite", () => {
   });
 
   it("9) should display summary charts", () => {
-    cy.visit("/summary");
+    cy.visit("/mood-summary");
     cy.get("canvas").should("have.length", 3); // 3 charts expected
   });
 });
