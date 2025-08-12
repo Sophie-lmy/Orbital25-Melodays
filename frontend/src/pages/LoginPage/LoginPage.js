@@ -7,9 +7,12 @@ function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
+
     const endpoint = isLogin ? 'login' : 'register';
 
     const body = isLogin
@@ -38,12 +41,15 @@ function LoginPage() {
     } catch (error) {
       console.error(`${endpoint} error:`, error);
       alert('Please try again later.');
+    } finally {
+      setSubmitting(false); 
     }
   };
 
   return (
     <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
+
+      <form className="login-form" onSubmit={handleSubmit} aria-busy={submitting}>
         <img src="/logopurple.jpg" alt="Logo" className="login-logo" />
 
         <label htmlFor="email">Email</label>
@@ -66,14 +72,19 @@ function LoginPage() {
           required
         />
 
-        <button type="submit" className="auth-button">
-          {isLogin ? 'Log in' : 'Sign up'}
+        <button type="submit" className="auth-button" disabled={submitting}>
+          {submitting ? (
+            <div className="spinner"></div> // spinner 
+          ) : (
+            isLogin ? 'Log in' : 'Sign up'
+          )}
         </button>
 
         <button
           type="button"
           className="auth-button"
           onClick={() => setIsLogin(!isLogin)}
+          disabled={submitting}
         >
           {isLogin ? 'Switch to Sign up' : 'Switch to Log in'}
         </button>
